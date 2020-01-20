@@ -1,0 +1,40 @@
+{
+  "name": "thebeastserver",
+  "version": "1.0.0",
+  "description": "The beast server",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build:pre && gulp build:ts --dest=temp --sourceMap=true && gulp build:rollup --sourceMap=true && gulp clean && gulp build:post",
+    "build:nodebug": "gulp build:pre && gulp build:ts --dest=temp --sourceMap=false && gulp build:rollup --sourceMap=false && gulp clean && gulp build:post",
+    "clean": "gulp clean"
+  },
+  "keywords": [
+    "thebeast"
+  ],
+  "author": "KhiemNguyen",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-rollup": "^2.16.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "rollup-plugin-ascii": "^0.0.3",
+    "rollup-plugin-includepaths": "^0.2.3",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.5.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.5",
+    "yargs": "^15.1.0"
+  },
+  "dependencies": {
+    "eslint": "^6.8.0",
+    "express": "^4.17.1",
+    "gulp-cli": "^2.2.0",
+    "npm": "^6.13.6",
+    "socket.io": "^2.3.0",
+    "underscore": "^1.9.2"
+  }
+}

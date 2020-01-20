@@ -1,0 +1,18 @@
+{
+   "compilerOptions": {
+     "allowJs": false,
+     "target": "es6",
+     "module": "CommonJS",
+     "moduleResolution": "node",
+     "allowUnreachableCode": false,
+     "allowUnusedLabels": false,
+     "noUnusedLocals": true,
+     "noUnusedParameters": false,
+     "preserveConstEnums": false,
+     "importHelpers": true,
+     "baseUrl": "./",
+     "esModuleInterop": true,
+     "lib": ["es2015", "es2018", "es5", "es6", "dom"]
+   }
+ }
+ 
