@@ -75,7 +75,7 @@ gulp.task("build:rollup", () => {
         format: "iife",
         /* iife, umd */
         name: "TheBeast",
-        file: "./dist/thebeastserver.js",
+        file: "./dist/index.js",
         sourcemap: sourceMap,
         indent: false,
         globals: {
