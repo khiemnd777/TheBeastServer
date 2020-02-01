@@ -1,8 +1,10 @@
 {
    "compilerOptions": {
      "allowJs": false,
-     "target": "es6",
-     "module": "CommonJS",
+     "target": "ES6",
+     "module": "commonjs",
+     "removeComments": true,
+     "noImplicitAny": true,
      "moduleResolution": "node",
      "allowUnreachableCode": false,
      "allowUnusedLabels": false,
@@ -12,7 +14,7 @@
      "importHelpers": true,
      "baseUrl": "./",
      "esModuleInterop": true,
-     "lib": ["es2015", "es2018", "es5", "es6", "dom"]
+     "lib": ["es5", "es6", "es2015"]
    }
  }
  
