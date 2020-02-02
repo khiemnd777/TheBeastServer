@@ -1,5 +1,11 @@
 export const EVENT_CONNECT = 'connect';
+export const EVENT_DISCONNECT = 'disconnect';
 export const EVENT_REGISTER = 'register';
+export const EVENT_PLAYER_MOVE = 'player move';
+export const EVENT_PLAYER_ROTATE = 'player rotate';
 export const CLIENT_EVENT_CONNECTED = 'connected';
 export const CLIENT_EVENT_REGISTERED = 'registered';
-export const CLIENT_EVENT_OTHER_REGISTERED = 'other player registered';
+export const CLIENT_EVENT_PLAYER_MOVE = 'player move';
+export const CLIENT_EVENT_PLAYER_ROTATE = 'player rotate';
+export const CLIENT_EVENT_OTHER_REGISTERED = 'other registered';
+export const CLIENT_EVENT_OTHER_DISCONNECTED = 'other disconnected';
