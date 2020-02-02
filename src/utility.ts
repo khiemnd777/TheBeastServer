@@ -2,7 +2,8 @@ import { Player, ClientPlayer } from './types';
 import guid from 'guid';
 
 export function registerClientPlayer(list: Player[], data: Player) {
-  list = [...list, data];
+  // list = [...list, data];
+  list.push(data);
 }
 
 export function preparePlayer({ name }: ClientPlayer): Player {
