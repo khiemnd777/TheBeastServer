@@ -1,2 +1,2 @@
 # TheBeastServer
-New game, more fun, more challenge
+New game, more fun, more challenge.
