@@ -1,5 +1,5 @@
 import { Player, ClientPlayer } from './types';
-import guid from 'guid';
+import { Iditifier } from './identifier';
 
 export function registerClientPlayer(list: Player[], data: Player) {
   // list = [...list, data];
@@ -8,7 +8,7 @@ export function registerClientPlayer(list: Player[], data: Player) {
 
 export function preparePlayer({ name }: ClientPlayer): Player {
   return {
-    id: guid.raw(),
+    id: Iditifier.raw(),
     name: name,
     position: [0, 0, 0],
     rotation: [0, 0, 0]
@@ -17,7 +17,7 @@ export function preparePlayer({ name }: ClientPlayer): Player {
 
 export function instancePlayer(): Player {
   return {
-    id: guid.EMPTY,
+    id: Iditifier.EMPTY,
     name: 'unknown',
     position: [0, 0, 0],
     rotation: [0, 0, 0]

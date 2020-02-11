@@ -4,7 +4,7 @@ import {
   EVENT_CONNECT,
   EVENT_DISCONNECT,
   EVENT_REGISTER,
-  EVENT_PLAYER_MOVE,
+  EVENT_PLAYER_TRANSLATE,
   EVENT_PLAYER_ROTATE
 } from './constants';
 import { Socket } from 'socket.io';
@@ -30,7 +30,7 @@ export function onSocketConnection(socket: Socket) {
   // register player
   socket.on(EVENT_REGISTER, onRegister(socket, currentPlayer, players));
   // player move
-  socket.on(EVENT_PLAYER_MOVE, onPlayerMove(socket, currentPlayer));
+  socket.on(EVENT_PLAYER_TRANSLATE, onPlayerMove(socket, currentPlayer));
   // player rotate
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
   //#endregion
