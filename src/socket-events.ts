@@ -17,7 +17,6 @@ import {
 //#region define events
 //--- connect
 export const onConnect = (socket: Socket, players: Player[]) => () => {
-  console.log(`new player has joined, count: ${players.length}`);
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
 // disconnect
@@ -54,6 +53,15 @@ export const onRegister = (
   socket.emit(EVENT_CLIENT_REGISTERED, currentPlayer);
   // emit to another clients the current player registered successfully
   socket.broadcast.emit(EVENT_CLIENT_OTHER_REGISTERED, currentPlayer);
+  console.log(`total players: ${players.length}`);
+};
+//-- play
+export const onPlay = (
+  socket: Socket,
+  currentPlayer: Player,
+  playerList: Player[]
+) => () => {
+
 };
 //--- player move
 export const onPlayerMove = (socket: Socket, currentPlayer: Player) => (

@@ -5,6 +5,7 @@ export const EVENT_DISCONNECT = 'disconnect';
 export const EVENT_REGISTER = 'register';
 export const EVENT_PLAYER_TRANSLATE = 'player translate';
 export const EVENT_PLAYER_ROTATE = 'player rotate';
+export const EVENT_PLAYER_PLAY = 'play';
 export const EVENT_CLIENT_CONNECTED = 'connected';
 export const EVENT_CLIENT_REGISTERED = 'registered';
 export const EVENT_CLIENT_PLAYER_TRANSLATE = 'player translate';
