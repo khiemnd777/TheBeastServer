@@ -5,7 +5,8 @@ import {
   EVENT_DISCONNECT,
   EVENT_REGISTER,
   EVENT_PLAYER_TRANSLATE,
-  EVENT_PLAYER_ROTATE
+  EVENT_PLAYER_ROTATE,
+  EVENT_INIT_PLAYERS
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -13,7 +14,8 @@ import {
   onDisconnect,
   onRegister,
   onPlayerMove,
-  onPlayerRotate
+  onPlayerRotate,
+  onInitPlayers
 } from './socket-events';
 
 // variables
@@ -23,6 +25,8 @@ export function onSocketConnection(socket: Socket) {
   // instance current player
   let currentPlayer: Player = instancePlayer();
   //#region events
+  // init players
+  socket.on(EVENT_INIT_PLAYERS, onInitPlayers(socket, players));
   // connect
   socket.on(EVENT_CONNECT, onConnect(socket, players));
   // disconnect

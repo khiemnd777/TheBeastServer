@@ -5,7 +5,8 @@ import {
   EVENT_CLIENT_REGISTERED,
   EVENT_CLIENT_OTHER_REGISTERED,
   EVENT_CLIENT_PLAYER_TRANSLATE,
-  EVENT_CLIENT_PLAYER_ROTATE
+  EVENT_CLIENT_PLAYER_ROTATE,
+  EVENT_CLIENT_INIT_PLAYERS
 } from './constants';
 import { Player, Position, Rotation, ClientPlayer } from './types';
 import {
@@ -19,7 +20,11 @@ import {
 export const onConnect = (socket: Socket, players: Player[]) => () => {
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
-// disconnect
+//--- init players
+export const onInitPlayers = (socket: Socket, players: Player[]) => () => {
+  socket.emit(EVENT_CLIENT_INIT_PLAYERS, players);
+};
+//--- disconnect
 export const onDisconnect = (
   socket: Socket,
   currentPlayer: Player,
@@ -60,9 +65,7 @@ export const onPlay = (
   socket: Socket,
   currentPlayer: Player,
   playerList: Player[]
-) => () => {
-
-};
+) => () => {};
 //--- player move
 export const onPlayerMove = (socket: Socket, currentPlayer: Player) => (
   data: Position
