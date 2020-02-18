@@ -6,7 +6,7 @@ import {
   EVENT_REGISTER,
   EVENT_PLAYER_TRANSLATE,
   EVENT_PLAYER_ROTATE,
-  EVENT_INIT_PLAYERS
+  EVENT_LOAD_PLAYERS
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -15,7 +15,7 @@ import {
   onRegister,
   onPlayerMove,
   onPlayerRotate,
-  onInitPlayers
+  onLoadPlayers
 } from './socket-events';
 
 // variables
@@ -26,7 +26,7 @@ export function onSocketConnection(socket: Socket) {
   let currentPlayer: Player = instancePlayer();
   //#region events
   // init players
-  socket.on(EVENT_INIT_PLAYERS, onInitPlayers(socket, players));
+  socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers(socket, players));
   // connect
   socket.on(EVENT_CONNECT, onConnect(socket, players));
   // disconnect

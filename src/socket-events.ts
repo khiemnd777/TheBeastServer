@@ -6,13 +6,15 @@ import {
   EVENT_CLIENT_OTHER_REGISTERED,
   EVENT_CLIENT_PLAYER_TRANSLATE,
   EVENT_CLIENT_PLAYER_ROTATE,
-  EVENT_CLIENT_INIT_PLAYERS
+  EVENT_CLIENT_LOADED_PLAYER,
+  EVENT_CLIENT_EMPTY_LIST
 } from './constants';
 import { Player, Position, Rotation, ClientPlayer } from './types';
 import {
   removeCurrentPlayer,
   preparePlayer,
-  registerClientPlayer
+  registerClientPlayer,
+  DeepClone
 } from './utility';
 
 //#region define events
@@ -20,9 +22,24 @@ import {
 export const onConnect = (socket: Socket, players: Player[]) => () => {
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
-//--- init players
-export const onInitPlayers = (socket: Socket, players: Player[]) => () => {
-  socket.emit(EVENT_CLIENT_INIT_PLAYERS, players);
+//--- load players
+export const onLoadPlayers = (socket: Socket, players: Player[]) => () => {
+  if (!players.length) {
+    // If the list is empty then finish loading list of players to local machine.
+    socket.emit(EVENT_CLIENT_EMPTY_LIST);
+    return;
+  }
+  // Send the list down to the local machine.
+  console.log('- getting all of the players:');
+  const clonePlayers = DeepClone(players);
+  const playerTotal = clonePlayers.length;
+  clonePlayers.forEach((player: Player) => {
+    console.log(`-- loaded player {name: ${player.name}, id: ${player.id}}`);
+    socket.emit(EVENT_CLIENT_LOADED_PLAYER, {
+      player: player,
+      total: playerTotal
+    });
+  });
 };
 //--- disconnect
 export const onDisconnect = (

@@ -29,3 +29,7 @@ export function removeCurrentPlayer(players: Player[], { id }: Player) {
   if (indexFound < 0) return;
   players.splice(indexFound, 1);
 }
+
+export function DeepClone(source: any) {
+  return JSON.parse(JSON.stringify(source));
+}
