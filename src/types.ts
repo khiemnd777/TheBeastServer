@@ -8,8 +8,10 @@ export type ClientPlayer = {
   name: string;
 };
 export type Position = {
+  id: number;
   position: number[];
 };
 export type Rotation = {
+  id: number;
   rotation: number[];
 };

@@ -31,7 +31,7 @@ export const onLoadPlayers = (socket: Socket, players: Player[]) => () => {
   }
   // Send the list down to the local machine.
   console.log('- getting all of the players:');
-  const clonePlayers = DeepClone(players);
+  const clonePlayers = DeepClone(players) as Player[];
   const playerTotal = clonePlayers.length;
   clonePlayers.forEach((player: Player) => {
     console.log(`-- loaded player {name: ${player.name}, id: ${player.id}}`);
@@ -84,19 +84,21 @@ export const onPlay = (
   playerList: Player[]
 ) => () => {};
 //--- player move
-export const onPlayerMove = (socket: Socket, currentPlayer: Player) => (
+export const onPlayerTranslate = (socket: Socket, currentPlayer: Player) => (
   data: Position
 ) => {
-  currentPlayer.position = data.position;
+  const currentPlayerPosition = DeepClone(data) as Position;
+  currentPlayer.position = currentPlayerPosition.position;
   // emit to another clients about position of current player
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_TRANSLATE, currentPlayer);
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_TRANSLATE, currentPlayerPosition);
 };
 //--- player rotate
 export const onPlayerRotate = (socket: Socket, currentPlayer: Player) => (
   data: Rotation
 ) => {
-  currentPlayer.rotation = data.rotation;
+  const currentPlayerRotation = DeepClone(data) as Rotation;
+  currentPlayer.rotation = currentPlayerRotation.rotation;
   // emit to another clients about rotation of current player
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, currentPlayer);
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, currentPlayerRotation);
 };
 //#endregion

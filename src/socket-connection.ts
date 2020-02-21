@@ -13,7 +13,7 @@ import {
   onConnect,
   onDisconnect,
   onRegister,
-  onPlayerMove,
+  onPlayerTranslate,
   onPlayerRotate,
   onLoadPlayers
 } from './socket-events';
@@ -34,7 +34,7 @@ export function onSocketConnection(socket: Socket) {
   // register player
   socket.on(EVENT_REGISTER, onRegister(socket, currentPlayer, players));
   // player move
-  socket.on(EVENT_PLAYER_TRANSLATE, onPlayerMove(socket, currentPlayer));
+  socket.on(EVENT_PLAYER_TRANSLATE, onPlayerTranslate(socket, currentPlayer));
   // player rotate
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
   //#endregion
