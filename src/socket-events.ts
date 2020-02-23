@@ -96,7 +96,7 @@ export const onPlayerTranslate = (socket: Socket, currentPlayer: Player) => (
 export const onPlayerRotate = (socket: Socket, currentPlayer: Player) => (
   data: Rotation
 ) => {
-  const currentPlayerRotation = DeepClone(data) as Rotation;
+  const currentPlayerRotation = DeepClone(data) as Rotation; 
   currentPlayer.rotation = currentPlayerRotation.rotation;
   // emit to another clients about rotation of current player
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, currentPlayerRotation);
