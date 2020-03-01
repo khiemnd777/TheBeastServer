@@ -11,7 +11,8 @@ export function preparePlayer({ name }: ClientPlayer): Player {
     id: Iditifier.raw(),
     name: name,
     position: [0, 0, 0],
-    rotation: [0, 0, 0]
+    rotation: [0, 0, 0],
+    flipXSign: 1
   };
 }
 
@@ -20,7 +21,8 @@ export function instancePlayer(): Player {
     id: Iditifier.EMPTY,
     name: 'unknown',
     position: [0, 0, 0],
-    rotation: [0, 0, 0]
+    rotation: [0, 0, 0],
+    flipXSign: 1
   };
 }
 

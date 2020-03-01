@@ -6,7 +6,8 @@ import {
   EVENT_REGISTER,
   EVENT_PLAYER_TRANSLATE,
   EVENT_PLAYER_ROTATE,
-  EVENT_LOAD_PLAYERS
+  EVENT_LOAD_PLAYERS,
+  EVENT_PLAYER_FLIP
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -15,7 +16,8 @@ import {
   onRegister,
   onPlayerTranslate,
   onPlayerRotate,
-  onLoadPlayers
+  onLoadPlayers,
+  onPlayerFlip
 } from './socket-events';
 
 // variables
@@ -37,6 +39,8 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_PLAYER_TRANSLATE, onPlayerTranslate(socket, currentPlayer));
   // player rotate
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
+  // player flip
+  socket.on(EVENT_PLAYER_FLIP, onPlayerFlip(socket, currentPlayer));
   //#endregion
 }
 //#endregion

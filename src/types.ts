@@ -3,6 +3,7 @@ export type Player = {
   name: string;
   position: number[];
   rotation: number[];
+  flipXSign: number;
 };
 export type ClientPlayer = {
   name: string;
@@ -14,4 +15,9 @@ export type Position = {
 export type Rotation = {
   id: number;
   rotation: number[];
+};
+export type Flip = {
+  id: number;
+  sign: number;
+  direction: number;
 };

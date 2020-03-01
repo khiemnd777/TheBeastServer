@@ -7,15 +7,17 @@ import {
   EVENT_CLIENT_PLAYER_TRANSLATE,
   EVENT_CLIENT_PLAYER_ROTATE,
   EVENT_CLIENT_LOADED_PLAYER,
-  EVENT_CLIENT_EMPTY_LIST
+  EVENT_CLIENT_EMPTY_LIST,
+  EVENT_CLIENT_OTHER_PLAYER_FLIP
 } from './constants';
-import { Player, Position, Rotation, ClientPlayer } from './types';
+import { Player, Position, Rotation, ClientPlayer, Flip } from './types';
 import {
   removeCurrentPlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone
 } from './utility';
+import { FlipDirection } from './enums';
 
 //#region define events
 //--- connect
@@ -96,9 +98,21 @@ export const onPlayerTranslate = (socket: Socket, currentPlayer: Player) => (
 export const onPlayerRotate = (socket: Socket, currentPlayer: Player) => (
   data: Rotation
 ) => {
-  const currentPlayerRotation = DeepClone(data) as Rotation; 
+  const currentPlayerRotation = DeepClone(data) as Rotation;
   currentPlayer.rotation = currentPlayerRotation.rotation;
   // emit to another clients about rotation of current player
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, currentPlayerRotation);
+};
+//--- player flip
+export const onPlayerFlip = (socket: Socket, currentPlayer: Player) => (
+  data: Flip
+) => {
+  const currentPlayerFlip = DeepClone(data) as Flip;
+  // assign to flipXSign if the flip direction is X.
+  if (currentPlayerFlip.direction === FlipDirection.X) {
+    currentPlayer.flipXSign = currentPlayerFlip.sign;
+  }
+  // emit to another clients about flipping of current player
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_PLAYER_FLIP, currentPlayerFlip);
 };
 //#endregion
