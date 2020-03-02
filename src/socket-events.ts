@@ -8,16 +8,24 @@ import {
   EVENT_CLIENT_PLAYER_ROTATE,
   EVENT_CLIENT_LOADED_PLAYER,
   EVENT_CLIENT_EMPTY_LIST,
-  EVENT_CLIENT_OTHER_PLAYER_FLIP
+  EVENT_CLIENT_OTHER_PLAYER_FLIP,
+  EVENT_CLIENT_OTHER_EYE_MOVE
 } from './constants';
-import { Player, Position, Rotation, ClientPlayer, Flip } from './types';
+import {
+  Player,
+  Position,
+  Rotation,
+  ClientPlayer,
+  Flip,
+  EyeMove
+} from './types';
 import {
   removeCurrentPlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone
 } from './utility';
-import { FlipDirection } from './enums';
+import { FlipDirection, EyeSide } from './enums';
 
 //#region define events
 //--- connect
@@ -89,30 +97,43 @@ export const onPlay = (
 export const onPlayerTranslate = (socket: Socket, currentPlayer: Player) => (
   data: Position
 ) => {
-  const currentPlayerPosition = DeepClone(data) as Position;
-  currentPlayer.position = currentPlayerPosition.position;
+  const position = DeepClone(data) as Position;
+  currentPlayer.position = position.position;
   // emit to another clients about position of current player
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_TRANSLATE, currentPlayerPosition);
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_TRANSLATE, position);
 };
 //--- player rotate
 export const onPlayerRotate = (socket: Socket, currentPlayer: Player) => (
   data: Rotation
 ) => {
-  const currentPlayerRotation = DeepClone(data) as Rotation;
-  currentPlayer.rotation = currentPlayerRotation.rotation;
+  const rotation = DeepClone(data) as Rotation;
+  currentPlayer.rotation = rotation.rotation;
   // emit to another clients about rotation of current player
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, currentPlayerRotation);
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_ROTATE, rotation);
 };
 //--- player flip
 export const onPlayerFlip = (socket: Socket, currentPlayer: Player) => (
   data: Flip
 ) => {
-  const currentPlayerFlip = DeepClone(data) as Flip;
+  const flipping = DeepClone(data) as Flip;
   // assign to flipXSign if the flip direction is X.
-  if (currentPlayerFlip.direction === FlipDirection.X) {
-    currentPlayer.flipXSign = currentPlayerFlip.sign;
+  if (flipping.direction === FlipDirection.X) {
+    currentPlayer.flipXSign = flipping.sign;
   }
   // emit to another clients about flipping of current player
-  socket.broadcast.emit(EVENT_CLIENT_OTHER_PLAYER_FLIP, currentPlayerFlip);
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_PLAYER_FLIP, flipping);
+};
+//--- player's eye move
+export const onEyeMove = (socket: Socket, currentPlayer: Player) => (
+  data: EyeMove
+) => {
+  const eyeMove = DeepClone(data) as EyeMove;
+  if (eyeMove.side === EyeSide.Left) {
+    currentPlayer.leftEye = eyeMove.position;
+  }
+  if (eyeMove.side === EyeSide.Right) {
+    currentPlayer.rightEye = eyeMove.position;
+  }
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_EYE_MOVE, eyeMove);
 };
 //#endregion

@@ -12,7 +12,9 @@ export function preparePlayer({ name }: ClientPlayer): Player {
     name: name,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
-    flipXSign: 1
+    flipXSign: 1,
+    leftEye: [0, 0, 0],
+    rightEye: [0, 0, 0]
   };
 }
 
@@ -22,7 +24,9 @@ export function instancePlayer(): Player {
     name: 'unknown',
     position: [0, 0, 0],
     rotation: [0, 0, 0],
-    flipXSign: 1
+    flipXSign: 1,
+    leftEye: [0, 0, 0],
+    rightEye: [0, 0, 0]
   };
 }
 
