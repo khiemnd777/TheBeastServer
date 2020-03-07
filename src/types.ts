@@ -6,6 +6,7 @@ export type Player = {
   flipXSign: number;
   leftEye: number[];
   rightEye: number[];
+  armRotation: number[];
 };
 export type ClientPlayer = {
   name: string;
@@ -27,4 +28,8 @@ export type EyeMove = {
   id: number;
   side: number;
   position: number[];
+};
+export type ArmRotate = {
+  id: number;
+  rotation: number[];
 };

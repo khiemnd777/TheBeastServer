@@ -8,7 +8,8 @@ import {
   EVENT_PLAYER_ROTATE,
   EVENT_LOAD_PLAYERS,
   EVENT_PLAYER_FLIP,
-  EVENT_EYE_MOVE
+  EVENT_EYE_MOVE,
+  EVENT_ARM_ROTATE
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -19,7 +20,8 @@ import {
   onPlayerRotate,
   onLoadPlayers,
   onPlayerFlip,
-  onEyeMove
+  onEyeMove,
+  onArmRotate
 } from './socket-events';
 
 // variables
@@ -37,14 +39,16 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_DISCONNECT, onDisconnect(socket, currentPlayer, players));
   // register player
   socket.on(EVENT_REGISTER, onRegister(socket, currentPlayer, players));
-  // player move
+  // player translates
   socket.on(EVENT_PLAYER_TRANSLATE, onPlayerTranslate(socket, currentPlayer));
-  // player rotate
+  // player rotates
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
   // player flip
   socket.on(EVENT_PLAYER_FLIP, onPlayerFlip(socket, currentPlayer));
   // player's eye moves
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
+  // player's arm rotates
+  socket.on(EVENT_ARM_ROTATE, onArmRotate(socket, currentPlayer));
   //#endregion
 }
 //#endregion

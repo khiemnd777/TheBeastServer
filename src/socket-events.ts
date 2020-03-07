@@ -9,7 +9,8 @@ import {
   EVENT_CLIENT_LOADED_PLAYER,
   EVENT_CLIENT_EMPTY_LIST,
   EVENT_CLIENT_OTHER_PLAYER_FLIP,
-  EVENT_CLIENT_OTHER_EYE_MOVE
+  EVENT_CLIENT_OTHER_EYE_MOVE,
+  EVENT_CLIENT_OTHER_ARM_ROTATE
 } from './constants';
 import {
   Player,
@@ -17,7 +18,8 @@ import {
   Rotation,
   ClientPlayer,
   Flip,
-  EyeMove
+  EyeMove,
+  ArmRotate
 } from './types';
 import {
   removeCurrentPlayer,
@@ -135,5 +137,13 @@ export const onEyeMove = (socket: Socket, currentPlayer: Player) => (
     currentPlayer.rightEye = eyeMove.position;
   }
   socket.broadcast.emit(EVENT_CLIENT_OTHER_EYE_MOVE, eyeMove);
+};
+//--- player's arm rotate
+export const onArmRotate = (socket: Socket, currentPlayer: Player) => (
+  data: ArmRotate
+) => {
+  const armRotate = DeepClone(data) as ArmRotate;
+  currentPlayer.armRotation = armRotate.rotation;
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_ARM_ROTATE, armRotate);
 };
 //#endregion
