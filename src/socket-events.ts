@@ -10,7 +10,8 @@ import {
   EVENT_CLIENT_EMPTY_LIST,
   EVENT_CLIENT_OTHER_PLAYER_FLIP,
   EVENT_CLIENT_OTHER_EYE_MOVE,
-  EVENT_CLIENT_OTHER_ARM_ROTATE
+  EVENT_CLIENT_OTHER_ARM_ROTATE,
+  EVENT_CLIENT_OTHER_WEAPON_TRIGGER
 } from './constants';
 import {
   Player,
@@ -19,7 +20,8 @@ import {
   ClientPlayer,
   Flip,
   EyeMove,
-  ArmRotate
+  ArmRotate,
+  WeaponTrigger
 } from './types';
 import {
   removeCurrentPlayer,
@@ -145,5 +147,12 @@ export const onArmRotate = (socket: Socket, currentPlayer: Player) => (
   const armRotate = DeepClone(data) as ArmRotate;
   currentPlayer.armRotation = armRotate.rotation;
   socket.broadcast.emit(EVENT_CLIENT_OTHER_ARM_ROTATE, armRotate);
+};
+//--- player's weapon trigger
+export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
+  data: WeaponTrigger
+) => {
+  const weaponTrigger = DeepClone(data) as WeaponTrigger;
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_WEAPON_TRIGGER, weaponTrigger);
 };
 //#endregion

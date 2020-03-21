@@ -33,3 +33,6 @@ export type ArmRotate = {
   id: number;
   rotation: number[];
 };
+export type WeaponTrigger = {
+  id: number;
+};

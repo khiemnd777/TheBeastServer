@@ -9,7 +9,8 @@ import {
   EVENT_LOAD_PLAYERS,
   EVENT_PLAYER_FLIP,
   EVENT_EYE_MOVE,
-  EVENT_ARM_ROTATE
+  EVENT_ARM_ROTATE,
+  EVENT_WEAPON_TRIGGER
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -21,7 +22,8 @@ import {
   onLoadPlayers,
   onPlayerFlip,
   onEyeMove,
-  onArmRotate
+  onArmRotate,
+  onWeaponTrigger
 } from './socket-events';
 
 // variables
@@ -49,6 +51,8 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
   // player's arm rotates
   socket.on(EVENT_ARM_ROTATE, onArmRotate(socket, currentPlayer));
+  // player's weapon trigger
+  socket.on(EVENT_WEAPON_TRIGGER, onWeaponTrigger(socket, currentPlayer));
   //#endregion
 }
 //#endregion
