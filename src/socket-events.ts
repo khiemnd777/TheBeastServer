@@ -11,7 +11,10 @@ import {
   EVENT_CLIENT_OTHER_PLAYER_FLIP,
   EVENT_CLIENT_OTHER_EYE_MOVE,
   EVENT_CLIENT_OTHER_ARM_ROTATE,
-  EVENT_CLIENT_OTHER_WEAPON_TRIGGER
+  EVENT_CLIENT_OTHER_WEAPON_TRIGGER,
+  EVENT_CLIENT_BULLET_REGISTERED,
+  EVENT_CLIENT_BULLET_OTHER_REGISTERED,
+  EVENT_CLIENT_BULLET_OTHER_REMOVED
 } from './constants';
 import {
   Player,
@@ -21,13 +24,18 @@ import {
   Flip,
   EyeMove,
   ArmRotate,
-  WeaponTrigger
+  WeaponTrigger,
+  Bullet,
+  ClientBullet
 } from './types';
 import {
   removeCurrentPlayer,
   preparePlayer,
   registerClientPlayer,
-  DeepClone
+  DeepClone,
+  prepareBullet,
+  registerClientBullet,
+  removeBullet
 } from './utility';
 import { FlipDirection, EyeSide } from './enums';
 
@@ -67,10 +75,10 @@ export const onDisconnect = (
   // emit to another clients the current player has disconnected
   socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, currentPlayer);
   // then, remove out of playlist
-  removeCurrentPlayer(players, currentPlayer);
+  removeCurrentPlayer(players, currentPlayer.id);
 };
 //--- register player
-export const onRegister = (
+export const onRegisterPlayer = (
   socket: Socket,
   currentPlayer: Player,
   players: Player[]
@@ -154,5 +162,27 @@ export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
 ) => {
   const weaponTrigger = DeepClone(data) as WeaponTrigger;
   socket.broadcast.emit(EVENT_CLIENT_OTHER_WEAPON_TRIGGER, weaponTrigger);
+};
+//--- register bullet
+export const onBulletRegister = (socket: Socket, bullets: Bullet[]) => (
+  data: ClientBullet
+) => {
+  // map ClientBullet to the Bullet.
+  const theBullet = prepareBullet(data);
+  // register client bullet.
+  registerClientBullet(bullets, theBullet);
+  // emit to client registering successully
+  socket.emit(EVENT_CLIENT_BULLET_REGISTERED, theBullet);
+  // emit to another clients the current player registered successfully
+  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REGISTERED, theBullet);
+};
+//--- disconnect
+export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
+  data: Bullet
+) => {
+  // emit to another clients the bullet has removed.
+  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, data);
+  // then, remove out of the playlist.
+  removeBullet(bullets, data.id);
 };
 //#endregion

@@ -36,3 +36,14 @@ export type ArmRotate = {
 export type WeaponTrigger = {
   id: number;
 };
+export type Bullet = {
+  id: number;
+  playerId: number;
+  position: number[];
+  rotation: number[];
+};
+export type ClientBullet = {
+  playerId: number;
+  position: number[];
+  rotation: number[];
+};

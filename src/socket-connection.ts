@@ -1,4 +1,4 @@
-import { Player } from './types';
+import { Player, Bullet } from './types';
 import { instancePlayer } from './utility';
 import {
   EVENT_CONNECT,
@@ -10,24 +10,32 @@ import {
   EVENT_PLAYER_FLIP,
   EVENT_EYE_MOVE,
   EVENT_ARM_ROTATE,
-  EVENT_WEAPON_TRIGGER
+  EVENT_WEAPON_TRIGGER,
+  EVENT_BULLET_REGISTER,
+  EVENT_BULLET_REMOVE
 } from './constants';
 import { Socket } from 'socket.io';
 import {
   onConnect,
   onDisconnect,
-  onRegister,
+  onRegisterPlayer,
   onPlayerTranslate,
   onPlayerRotate,
   onLoadPlayers,
   onPlayerFlip,
   onEyeMove,
   onArmRotate,
-  onWeaponTrigger
+  onWeaponTrigger,
+  onBulletRegister,
+  onBulletRemove
 } from './socket-events';
 
-// variables
+//#region variables
+// list of players
 const players: Player[] = [];
+const bullets: Bullet[] = [];
+//#endregion
+
 //#region main events
 export function onSocketConnection(socket: Socket) {
   // instance current player
@@ -40,7 +48,7 @@ export function onSocketConnection(socket: Socket) {
   // disconnect
   socket.on(EVENT_DISCONNECT, onDisconnect(socket, currentPlayer, players));
   // register player
-  socket.on(EVENT_REGISTER, onRegister(socket, currentPlayer, players));
+  socket.on(EVENT_REGISTER, onRegisterPlayer(socket, currentPlayer, players));
   // player translates
   socket.on(EVENT_PLAYER_TRANSLATE, onPlayerTranslate(socket, currentPlayer));
   // player rotates
@@ -53,6 +61,10 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_ARM_ROTATE, onArmRotate(socket, currentPlayer));
   // player's weapon trigger
   socket.on(EVENT_WEAPON_TRIGGER, onWeaponTrigger(socket, currentPlayer));
+  // register the bullet
+  socket.on(EVENT_BULLET_REGISTER, onBulletRegister(socket, bullets));
+  // remove the bullet
+  socket.on(EVENT_BULLET_REMOVE, onBulletRemove(socket, bullets));
   //#endregion
 }
 //#endregion
