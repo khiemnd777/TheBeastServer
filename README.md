@@ -1,2 +1,2 @@
-# TheBeastServer
-New game, more fun, more challenge.
+# FEB - Server-side
+The freaky endless battle, many guns, many bullets.
