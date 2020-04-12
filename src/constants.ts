@@ -1,5 +1,7 @@
 export const CONNECTION_PORT = 7777;
 export const CONNECTION_PATH = '/thebeast';
+export const SAME_SIDE = 'same-side';
+export const EXTERNAL_SIDE = 'external-side';
 export const EVENT_CONNECT = 'connect';
 export const EVENT_DISCONNECT = 'disconnect';
 export const EVENT_REGISTER = 'register';

@@ -12,7 +12,8 @@ import {
   EVENT_ARM_ROTATE,
   EVENT_WEAPON_TRIGGER,
   EVENT_BULLET_REGISTER,
-  EVENT_BULLET_REMOVE
+  EVENT_BULLET_REMOVE,
+  SAME_SIDE,
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -27,19 +28,33 @@ import {
   onArmRotate,
   onWeaponTrigger,
   onBulletRegister,
-  onBulletRemove
+  onBulletRemove,
 } from './socket-events';
+import { WEAPON_SPAWNER_ID } from './weapon-spawner/weapon-spawner';
 
 //#region variables
-// list of players
+// The list of the players.
 const players: Player[] = [];
+// The list of the bullets.
 const bullets: Bullet[] = [];
 //#endregion
 
 //#region main events
 export function onSocketConnection(socket: Socket) {
+  var query = socket.handshake.query;
+  // This is for same-side such as the client-side is also the server-side.
+  if (query.token === SAME_SIDE) {
+    // If the appId is weapon-spawner.
+    if (query.appId === WEAPON_SPAWNER_ID) {
+      socket.on('test socket client', () => {
+        socket.broadcast.emit('test socket client');
+      });
+    }
+    return;
+  }
+  // This is for external-side.
   // instance current player
-  let currentPlayer: Player = instancePlayer();
+  const currentPlayer: Player = instancePlayer();
   //#region events
   // init players
   socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers(socket, players));
