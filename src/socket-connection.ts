@@ -13,7 +13,7 @@ import {
   EVENT_WEAPON_TRIGGER,
   EVENT_BULLET_REGISTER,
   EVENT_BULLET_REMOVE,
-  SAME_SIDE,
+  EVENT_HEAD_ROTATE,
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -29,8 +29,8 @@ import {
   onWeaponTrigger,
   onBulletRegister,
   onBulletRemove,
+  onHeadRotate,
 } from './socket-events';
-import { WEAPON_SPAWNER_ID } from './weapon-spawner/weapon-spawner';
 
 //#region variables
 // The list of the players.
@@ -41,17 +41,18 @@ const bullets: Bullet[] = [];
 
 //#region main events
 export function onSocketConnection(socket: Socket) {
-  var query = socket.handshake.query;
-  // This is for same-side such as the client-side is also the server-side.
-  if (query.token === SAME_SIDE) {
-    // If the appId is weapon-spawner.
-    if (query.appId === WEAPON_SPAWNER_ID) {
-      socket.on('test socket client', () => {
-        socket.broadcast.emit('test socket client');
-      });
-    }
-    return;
-  }
+  // var query = socket.handshake.query;
+  // // This is for same-side such as the client-side is also the server-side.
+  // if (query.token === SAME_SIDE) {
+  //   // If the appId is weapon-spawner.
+  //   if (query.appId === WEAPON_SPAWNER_ID) {
+  //     socket.on('test socket client', () => {
+  //       socket.broadcast.emit('test socket client');
+  //     });
+  //   }
+  //   return;
+  // }
+  
   // This is for external-side.
   // instance current player
   const currentPlayer: Player = instancePlayer();
@@ -74,6 +75,8 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
   // player's arm rotates
   socket.on(EVENT_ARM_ROTATE, onArmRotate(socket, currentPlayer));
+  // tank's head rotates
+  socket.on(EVENT_HEAD_ROTATE, onHeadRotate(socket, currentPlayer));
   // player's weapon trigger
   socket.on(EVENT_WEAPON_TRIGGER, onWeaponTrigger(socket, currentPlayer));
   // register the bullet

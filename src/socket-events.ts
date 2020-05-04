@@ -14,7 +14,8 @@ import {
   EVENT_CLIENT_OTHER_WEAPON_TRIGGER,
   EVENT_CLIENT_BULLET_REGISTERED,
   EVENT_CLIENT_BULLET_OTHER_REGISTERED,
-  EVENT_CLIENT_BULLET_OTHER_REMOVED
+  EVENT_CLIENT_BULLET_OTHER_REMOVED,
+  EVENT_CLIENT_OTHER_HEAD_ROTATE,
 } from './constants';
 import {
   Player,
@@ -26,7 +27,8 @@ import {
   ArmRotate,
   WeaponTrigger,
   Bullet,
-  ClientBullet
+  ClientBullet,
+  HeadRotate,
 } from './types';
 import {
   removeCurrentPlayer,
@@ -35,7 +37,7 @@ import {
   DeepClone,
   prepareBullet,
   registerClientBullet,
-  removeBullet
+  removeBullet,
 } from './utility';
 import { FlipDirection, EyeSide } from './enums';
 
@@ -59,7 +61,7 @@ export const onLoadPlayers = (socket: Socket, players: Player[]) => () => {
     console.log(`-- loaded player {name: ${player.name}, id: ${player.id}}`);
     socket.emit(EVENT_CLIENT_LOADED_PLAYER, {
       player: player,
-      total: playerTotal
+      total: playerTotal,
     });
   });
 };
@@ -155,6 +157,14 @@ export const onArmRotate = (socket: Socket, currentPlayer: Player) => (
   const armRotate = DeepClone(data) as ArmRotate;
   currentPlayer.armRotation = armRotate.rotation;
   socket.broadcast.emit(EVENT_CLIENT_OTHER_ARM_ROTATE, armRotate);
+};
+//--- tank's head rotate
+export const onHeadRotate = (socket: Socket, currentPlayer: Player) => (
+  data: HeadRotate
+) => {
+  const headRotate = DeepClone(data) as HeadRotate;
+  currentPlayer.headRotation = headRotate.rotation;
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_HEAD_ROTATE, headRotate);
 };
 //--- player's weapon trigger
 export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
