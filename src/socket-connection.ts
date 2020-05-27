@@ -41,20 +41,7 @@ const bullets: Bullet[] = [];
 
 //#region main events
 export function onSocketConnection(socket: Socket) {
-  // var query = socket.handshake.query;
-  // // This is for same-side such as the client-side is also the server-side.
-  // if (query.token === SAME_SIDE) {
-  //   // If the appId is weapon-spawner.
-  //   if (query.appId === WEAPON_SPAWNER_ID) {
-  //     socket.on('test socket client', () => {
-  //       socket.broadcast.emit('test socket client');
-  //     });
-  //   }
-  //   return;
-  // }
-  
-  // This is for external-side.
-  // instance current player
+  // Declare the instance current player
   const currentPlayer: Player = instancePlayer();
   //#region events
   // init players
