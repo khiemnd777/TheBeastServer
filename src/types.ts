@@ -1,6 +1,7 @@
 export type Player = {
   id: number;
   name: string;
+  hp: number;
   position: number[];
   rotation: number[];
   flipXSign: number;

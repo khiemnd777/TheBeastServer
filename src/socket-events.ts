@@ -16,6 +16,8 @@ import {
   EVENT_CLIENT_BULLET_OTHER_REGISTERED,
   EVENT_CLIENT_BULLET_OTHER_REMOVED,
   EVENT_CLIENT_OTHER_HEAD_ROTATE,
+  EVENT_CLIENT_PLAYER_WAS_DEAD,
+  EVENT_CLIENT_PLAYER_SYNC_HP,
 } from './constants';
 import {
   Player,
@@ -165,6 +167,18 @@ export const onHeadRotate = (socket: Socket, currentPlayer: Player) => (
   const headRotate = DeepClone(data) as HeadRotate;
   currentPlayer.headRotation = headRotate.rotation;
   socket.broadcast.emit(EVENT_CLIENT_OTHER_HEAD_ROTATE, headRotate);
+};
+//--- player dies
+export const onPlayerDie = (socket: Socket, currentPlayer: Player) => (
+  data: Player
+) => {
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_WAS_DEAD, data);
+};
+//--- player's hp
+export const onPlayerHp = (socket: Socket, currentPlayer: Player) => (
+  data: Player
+) => {
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_HP, data);
 };
 //--- player's weapon trigger
 export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (

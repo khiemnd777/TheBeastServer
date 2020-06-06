@@ -14,6 +14,8 @@ import {
   EVENT_BULLET_REGISTER,
   EVENT_BULLET_REMOVE,
   EVENT_HEAD_ROTATE,
+  EVENT_PLAYER_DIE,
+  EVENT_PLAYER_HP,
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -30,6 +32,8 @@ import {
   onBulletRegister,
   onBulletRemove,
   onHeadRotate,
+  onPlayerDie,
+  onPlayerHp,
 } from './socket-events';
 
 //#region variables
@@ -58,6 +62,10 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
   // player flip
   socket.on(EVENT_PLAYER_FLIP, onPlayerFlip(socket, currentPlayer));
+  // player dies
+  socket.on(EVENT_PLAYER_DIE, onPlayerDie(socket, currentPlayer));
+  // player's hp
+  socket.on(EVENT_PLAYER_HP, onPlayerHp(socket, currentPlayer));
   // player's eye moves
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
   // player's arm rotates
