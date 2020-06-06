@@ -49,6 +49,7 @@ export function instancePlayer(): Player {
   return {
     id: Iditifier.EMPTY,
     name: 'unknown',
+    hp: 250,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     flipXSign: 1,
