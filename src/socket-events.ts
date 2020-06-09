@@ -33,13 +33,14 @@ import {
   HeadRotate,
 } from './types';
 import {
-  removeCurrentPlayer,
+  removePlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone,
   prepareBullet,
   registerClientBullet,
   removeBullet,
+  getPlayer,
 } from './utility';
 import { FlipDirection, EyeSide } from './enums';
 
@@ -79,7 +80,7 @@ export const onDisconnect = (
   // emit to another clients the current player has disconnected
   socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, currentPlayer);
   // then, remove out of playlist
-  removeCurrentPlayer(players, currentPlayer.id);
+  removePlayer(players, currentPlayer.id);
 };
 //--- register player
 export const onRegisterPlayer = (
@@ -110,11 +111,15 @@ export const onPlay = (
   playerList: Player[]
 ) => () => {};
 //--- player move
-export const onPlayerTranslate = (socket: Socket, currentPlayer: Player) => (
-  data: Position
-) => {
+export const onPlayerTranslate = (
+  socket: Socket,
+  currentPlayer: Player,
+  playerList: Player[]
+) => (data: Position) => {
   const position = DeepClone(data) as Position;
   currentPlayer.position = position.position;
+  const playerFound = getPlayer(playerList, data.id);
+  playerFound && (playerFound.position = position.position);
   // emit to another clients about position of current player
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_TRANSLATE, position);
 };
@@ -169,15 +174,22 @@ export const onHeadRotate = (socket: Socket, currentPlayer: Player) => (
   socket.broadcast.emit(EVENT_CLIENT_OTHER_HEAD_ROTATE, headRotate);
 };
 //--- player dies
-export const onPlayerDie = (socket: Socket, currentPlayer: Player) => (
-  data: Player
-) => {
+export const onPlayerDie = (
+  socket: Socket,
+  currentPlayer: Player,
+  playerList: Player[]
+) => (data: Player) => {
+  removePlayer(playerList, data.id);
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_WAS_DEAD, data);
 };
 //--- player's hp
-export const onPlayerHp = (socket: Socket, currentPlayer: Player) => (
-  data: Player
-) => {
+export const onPlayerHp = (
+  socket: Socket,
+  currentPlayer: Player,
+  playerList: Player[]
+) => (data: Player) => {
+  const playerFound = getPlayer(playerList, data.id);
+  playerFound && (playerFound.hp = data.hp);
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_HP, data);
 };
 //--- player's weapon trigger

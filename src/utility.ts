@@ -60,7 +60,11 @@ export function instancePlayer(): Player {
   };
 }
 
-export function removeCurrentPlayer(players: Player[], id: number) {
+export function getPlayer(players: Player[], id: number): Player {
+  return players.find((player) => player.id === id);
+}
+
+export function removePlayer(players: Player[], id: number) {
   const indexFound = players.findIndex((player) => player.id === id);
   if (indexFound < 0) return;
   ArraySplice(players, indexFound);

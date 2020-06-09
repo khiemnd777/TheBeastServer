@@ -57,15 +57,18 @@ export function onSocketConnection(socket: Socket) {
   // register player
   socket.on(EVENT_REGISTER, onRegisterPlayer(socket, currentPlayer, players));
   // player translates
-  socket.on(EVENT_PLAYER_TRANSLATE, onPlayerTranslate(socket, currentPlayer));
+  socket.on(
+    EVENT_PLAYER_TRANSLATE,
+    onPlayerTranslate(socket, currentPlayer, players)
+  );
   // player rotates
   socket.on(EVENT_PLAYER_ROTATE, onPlayerRotate(socket, currentPlayer));
   // player flip
   socket.on(EVENT_PLAYER_FLIP, onPlayerFlip(socket, currentPlayer));
   // player dies
-  socket.on(EVENT_PLAYER_DIE, onPlayerDie(socket, currentPlayer));
+  socket.on(EVENT_PLAYER_DIE, onPlayerDie(socket, currentPlayer, players));
   // player's hp
-  socket.on(EVENT_PLAYER_HP, onPlayerHp(socket, currentPlayer));
+  socket.on(EVENT_PLAYER_HP, onPlayerHp(socket, currentPlayer, players));
   // player's eye moves
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
   // player's arm rotates
