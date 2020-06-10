@@ -21,7 +21,8 @@ export function preparePlayer({ name }: ClientPlayer): Player {
   return {
     id: Iditifier.raw(),
     name: name,
-    hp: 250,
+    hp: 300,
+    maxHp: 300,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     flipXSign: 1,
@@ -49,7 +50,8 @@ export function instancePlayer(): Player {
   return {
     id: Iditifier.EMPTY,
     name: 'unknown',
-    hp: 250,
+    hp: 300,
+    maxHp: 300,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     flipXSign: 1,

@@ -18,6 +18,8 @@ import {
   EVENT_CLIENT_OTHER_HEAD_ROTATE,
   EVENT_CLIENT_PLAYER_WAS_DEAD,
   EVENT_CLIENT_PLAYER_SYNC_HP,
+  EVENT_CLIENT_PLAYER_SYNC_MAX_HP,
+  EVENT_CLIENT_SYNC_HP_PICKER,
 } from './constants';
 import {
   Player,
@@ -31,6 +33,7 @@ import {
   Bullet,
   ClientBullet,
   HeadRotate,
+  HpPicker,
 } from './types';
 import {
   removePlayer,
@@ -191,6 +194,18 @@ export const onPlayerHp = (
   const playerFound = getPlayer(playerList, data.id);
   playerFound && (playerFound.hp = data.hp);
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_HP, data);
+};
+//--- player's max hp
+export const onPlayerMaxHp = (socket: Socket, playerList: Player[]) => (
+  data: Player
+) => {
+  const playerFound = getPlayer(playerList, data.id);
+  playerFound && (playerFound.maxHp = data.maxHp);
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_MAX_HP, data);
+};
+//--- health poin picker
+export const onHpPicker = (socket: Socket) => (data: HpPicker) => {
+  socket.broadcast.emit(EVENT_CLIENT_SYNC_HP_PICKER, data);
 };
 //--- player's weapon trigger
 export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (

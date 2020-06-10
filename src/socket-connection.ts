@@ -16,6 +16,8 @@ import {
   EVENT_HEAD_ROTATE,
   EVENT_PLAYER_DIE,
   EVENT_PLAYER_HP,
+  EVENT_PLAYER_MAX_HP,
+  EVENT_HP_PICKER,
 } from './constants';
 import { Socket } from 'socket.io';
 import {
@@ -34,6 +36,8 @@ import {
   onHeadRotate,
   onPlayerDie,
   onPlayerHp,
+  onPlayerMaxHp,
+  onHpPicker,
 } from './socket-events';
 
 //#region variables
@@ -69,6 +73,10 @@ export function onSocketConnection(socket: Socket) {
   socket.on(EVENT_PLAYER_DIE, onPlayerDie(socket, currentPlayer, players));
   // player's hp
   socket.on(EVENT_PLAYER_HP, onPlayerHp(socket, currentPlayer, players));
+  // player's max hp
+  socket.on(EVENT_PLAYER_MAX_HP, onPlayerMaxHp(socket, players));
+  // hp picker
+  socket.on(EVENT_HP_PICKER, onHpPicker(socket));
   // player's eye moves
   socket.on(EVENT_EYE_MOVE, onEyeMove(socket, currentPlayer));
   // player's arm rotates

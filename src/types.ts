@@ -2,6 +2,7 @@ export type Player = {
   id: number;
   name: string;
   hp: number;
+  maxHp: number;
   position: number[];
   rotation: number[];
   flipXSign: number;
@@ -52,4 +53,9 @@ export type ClientBullet = {
   playerId: number;
   position: number[];
   rotation: number[];
+};
+export type HpPicker = {
+  targetPosition: number[];
+  position: number[];
+  scale: number;
 };
