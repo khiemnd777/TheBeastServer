@@ -19,15 +19,14 @@ import {
   EVENT_PLAYER_MAX_HP,
   EVENT_HP_PICKER,
   EVENT_HP_PICKER_CONSUME,
+  EVENT_CLIENT_REGISTER_PLAYER_FINISHED,
+  EVENT_RESPONSE_GETTING_PLAYERS,
 } from './constants';
-import { Socket } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import {
-  onConnect,
   onDisconnect,
-  onRegisterPlayer,
   onPlayerTranslate,
   onPlayerRotate,
-  onLoadPlayers,
   onPlayerFlip,
   onEyeMove,
   onArmRotate,
@@ -40,6 +39,11 @@ import {
   onPlayerMaxHp,
   onHpPicker,
   onHpPickerConsume,
+  onRegisterPlayer2,
+  onConnect2,
+  onRegisterPlayerFinished,
+  onLoadPlayers2,
+  onResponseGettingPlayers,
 } from './socket-events';
 
 //#region variables
@@ -50,18 +54,27 @@ const bullets: Bullet[] = [];
 //#endregion
 
 //#region main events
-export function onSocketConnection(socket: Socket) {
+export const onSocketConnection = (io: Server) => (socket: Socket) => {
   // Declare the instance current player
   const currentPlayer: Player = instancePlayer();
   //#region events
   // init players
-  socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers(socket, players));
+  socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers2(io, socket, players));
+  socket.on(
+    EVENT_RESPONSE_GETTING_PLAYERS,
+    onResponseGettingPlayers(io, socket)
+  );
   // connect
-  socket.on(EVENT_CONNECT, onConnect(socket, players));
+  socket.on(EVENT_CONNECT, onConnect2(socket));
   // disconnect
   socket.on(EVENT_DISCONNECT, onDisconnect(socket, currentPlayer, players));
   // register player
-  socket.on(EVENT_REGISTER, onRegisterPlayer(socket, currentPlayer, players));
+  socket.on(EVENT_REGISTER, onRegisterPlayer2(socket));
+  // register player finished.
+  socket.on(
+    EVENT_CLIENT_REGISTER_PLAYER_FINISHED,
+    onRegisterPlayerFinished(socket)
+  );
   // player translates
   socket.on(
     EVENT_PLAYER_TRANSLATE,
@@ -94,5 +107,6 @@ export function onSocketConnection(socket: Socket) {
   // remove the bullet
   socket.on(EVENT_BULLET_REMOVE, onBulletRemove(socket, bullets));
   //#endregion
-}
+};
+
 //#endregion

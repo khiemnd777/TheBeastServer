@@ -1,4 +1,4 @@
-import { Socket } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import {
   EVENT_CLIENT_CONNECTED,
   EVENT_CLIENT_OTHER_DISCONNECTED,
@@ -20,6 +20,11 @@ import {
   EVENT_CLIENT_PLAYER_SYNC_MAX_HP,
   EVENT_CLIENT_SYNC_HP_PICKER,
   EVENT_CLIENT_SYNC_HP_PICKER_CONSUME,
+  EVENT_REQUIRE_REGISTER_PLAYER,
+  SERVER,
+  EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED,
+  EVENT_REQUIRE_GETTING_PLAYERS,
+  EVENT_DOWNLOAD_PLAYERS,
 } from './constants';
 import {
   Player,
@@ -34,24 +39,57 @@ import {
   HeadRotate,
   HpPicker,
   NetIdentity,
+  ClientRegistrar,
+  Connection,
+  ClientRegistrarFinished,
+  ReponseLoadingPlayer,
 } from './types';
 import {
   removePlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone,
-  removeBullet,
   getPlayer,
 } from './utility';
 import { FlipDirection, EyeSide } from './enums';
 
 //#region define events
 //--- connect
+export const onConnect2 = (socket: Socket) => (data: Connection) => {
+  if (data.isServer) {
+    socket.join(SERVER);
+    return;
+  }
+  socket.emit(EVENT_CLIENT_CONNECTED);
+};
 export const onConnect = (socket: Socket, players: Player[]) => () => {
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
 //--- load players
-export const onLoadPlayers = (socket: Socket, players: Player[]) => () => {
+export const onLoadPlayers2 = (
+  io: Server,
+  socket: Socket,
+  players: Player[]
+) => () => {
+  // Send the list down to the local machine.
+  console.log('- Request getting all players:');
+  socket.broadcast
+    .to(SERVER)
+    .emit(EVENT_REQUIRE_GETTING_PLAYERS, { socketId: socket.id });
+};
+
+export const onResponseGettingPlayers = (io: Server, socket: Socket) => (
+  data: ReponseLoadingPlayer
+) => {
+  const dataCloned = DeepClone(data) as ReponseLoadingPlayer;
+  io.to(dataCloned.socketId).emit(EVENT_DOWNLOAD_PLAYERS, dataCloned);
+};
+
+export const onLoadPlayers = (
+  io: Server,
+  socket: Socket,
+  players: Player[]
+) => () => {
   if (!players.length) {
     // If the list is empty then finish loading list of players to local machine.
     socket.emit(EVENT_CLIENT_EMPTY_LIST);
@@ -84,6 +122,23 @@ export const onDisconnect = (
   removePlayer(players, currentPlayer.id);
 };
 //--- register player
+export const onRegisterPlayer2 = (socket: Socket) => (
+  data: ClientRegistrar
+) => {
+  // map ClientPlayer to Player
+  console.log(
+    `The client sent a request to create player: ${JSON.stringify(data)}`
+  );
+  const dataCloned = DeepClone(data);
+  socket.broadcast.to(SERVER).emit(EVENT_REQUIRE_REGISTER_PLAYER, dataCloned);
+};
+export const onRegisterPlayerFinished = (socket: Socket) => (
+  data: ClientRegistrarFinished
+) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED, dataCloned);
+};
+//@Obsolete, recommended using onRegisterPlayer2 instead.
 export const onRegisterPlayer = (
   socket: Socket,
   currentPlayer: Player,
@@ -215,13 +270,14 @@ export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
   data: WeaponTrigger
 ) => {
   const weaponTrigger = DeepClone(data) as WeaponTrigger;
-  socket.broadcast.emit(EVENT_CLIENT_OTHER_WEAPON_TRIGGER, weaponTrigger);
+  socket.broadcast
+    .to(SERVER)
+    .emit(EVENT_CLIENT_OTHER_WEAPON_TRIGGER, weaponTrigger);
 };
 //--- register bullet
 export const onBulletRegister = (socket: Socket, bullets: Bullet[]) => (
   data: Bullet
 ) => {
-  // map ClientBullet to the Bullet.
   const bulletCloned = DeepClone(data);
   // emit to another clients the current player registered successfully
   socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REGISTERED, bulletCloned);

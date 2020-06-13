@@ -12,5 +12,5 @@ export function initSocket(port: number = 7777, path: string = 'socket.io') {
   // register server to a port
   server.listen(port);
   app.get('/', (req, res) => res.send('The Beast Server'));
-  io.on('connection', onSocketConnection);
+  io.on('connection', onSocketConnection(io));
 }

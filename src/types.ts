@@ -1,6 +1,9 @@
 export type NetIdentity = {
   id: number;
 };
+export type Connection = {
+  isServer: boolean;
+};
 export type Player = {
   id: number;
   name: string;
@@ -13,6 +16,25 @@ export type Player = {
   rightEye: number[];
   armRotation: number[];
   headRotation: number[];
+};
+export type ClientRegistrar = {
+  clientId: string;
+  playerName: string;
+};
+export type ClientRegistrarFinished = {
+  clientId: string;
+  playerName: string;
+  id: number,
+  position: number[],
+  hp: number
+};
+export type ReponseLoadingPlayer = {
+  socketId: string;
+  playerName: string;
+  id: number,
+  position: number[],
+  hp: number,
+  maxHp: number
 };
 export type ClientPlayer = {
   name: string;

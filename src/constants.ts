@@ -2,9 +2,14 @@ export const CONNECTION_PORT = 7777;
 export const CONNECTION_PATH = '/thebeast';
 export const SAME_SIDE = 'same-side';
 export const EXTERNAL_SIDE = 'external-side';
+export const SERVER = 'server';
+
+//#region Server events
 export const EVENT_CONNECT = 'connect';
 export const EVENT_DISCONNECT = 'disconnect';
 export const EVENT_REGISTER = 'register';
+//#endregion
+
 //#region Player events
 export const EVENT_PLAYER_TRANSLATE = 'player translate';
 export const EVENT_PLAYER_ROTATE = 'player rotate';
@@ -38,6 +43,14 @@ export const EVENT_CLIENT_OTHER_HEAD_ROTATE = 'other head rotate';
 export const EVENT_CLIENT_LOADED_PLAYER = 'loaded player';
 export const EVENT_CLIENT_OTHER_WEAPON_TRIGGER = 'other weapon trigger';
 export const EVENT_CLIENT_EMPTY_LIST = 'empty list';
+export const EVENT_CLIENT_REGISTER_PLAYER_FINISHED = 'register player finished';
+export const EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED =
+  'sync register player finished';
+export const EVENT_REQUIRE_REGISTER_PLAYER = 'server register player';
+export const EVENT_REQUIRE_GETTING_PLAYERS = 'request getting players';
+export const EVENT_RESPONSE_GETTING_PLAYERS = 'response getting players';
+export const EVENT_DOWNLOAD_PLAYERS = 'download players';
+
 //#endregion
 //#region Bullet events
 export const EVENT_BULLET_REGISTER = 'bullet register';
