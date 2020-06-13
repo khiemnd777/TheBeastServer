@@ -1,3 +1,6 @@
+export type NetIdentity = {
+  id: number;
+};
 export type Player = {
   id: number;
   name: string;
@@ -55,6 +58,7 @@ export type ClientBullet = {
   rotation: number[];
 };
 export type HpPicker = {
+  id: number;
   targetPosition: number[];
   position: number[];
   scale: number;

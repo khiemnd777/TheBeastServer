@@ -12,7 +12,6 @@ import {
   EVENT_CLIENT_OTHER_EYE_MOVE,
   EVENT_CLIENT_OTHER_ARM_ROTATE,
   EVENT_CLIENT_OTHER_WEAPON_TRIGGER,
-  EVENT_CLIENT_BULLET_REGISTERED,
   EVENT_CLIENT_BULLET_OTHER_REGISTERED,
   EVENT_CLIENT_BULLET_OTHER_REMOVED,
   EVENT_CLIENT_OTHER_HEAD_ROTATE,
@@ -20,6 +19,7 @@ import {
   EVENT_CLIENT_PLAYER_SYNC_HP,
   EVENT_CLIENT_PLAYER_SYNC_MAX_HP,
   EVENT_CLIENT_SYNC_HP_PICKER,
+  EVENT_CLIENT_SYNC_HP_PICKER_CONSUME,
 } from './constants';
 import {
   Player,
@@ -31,17 +31,15 @@ import {
   ArmRotate,
   WeaponTrigger,
   Bullet,
-  ClientBullet,
   HeadRotate,
   HpPicker,
+  NetIdentity,
 } from './types';
 import {
   removePlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone,
-  prepareBullet,
-  registerClientBullet,
   removeBullet,
   getPlayer,
 } from './utility';
@@ -205,7 +203,12 @@ export const onPlayerMaxHp = (socket: Socket, playerList: Player[]) => (
 };
 //--- health poin picker
 export const onHpPicker = (socket: Socket) => (data: HpPicker) => {
-  socket.broadcast.emit(EVENT_CLIENT_SYNC_HP_PICKER, data);
+  const dataCloned = DeepClone(data) as HpPicker;
+  socket.broadcast.emit(EVENT_CLIENT_SYNC_HP_PICKER, dataCloned);
+};
+export const onHpPickerConsume = (socket: Socket) => (data: NetIdentity) => {
+  const dataCloned = DeepClone(data) as NetIdentity;
+  socket.broadcast.emit(EVENT_CLIENT_SYNC_HP_PICKER_CONSUME, dataCloned);
 };
 //--- player's weapon trigger
 export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
@@ -216,24 +219,19 @@ export const onWeaponTrigger = (socket: Socket, currentPlayer: Player) => (
 };
 //--- register bullet
 export const onBulletRegister = (socket: Socket, bullets: Bullet[]) => (
-  data: ClientBullet
-) => {
-  // map ClientBullet to the Bullet.
-  const theBullet = prepareBullet(data);
-  // register client bullet.
-  registerClientBullet(bullets, theBullet);
-  // emit to client registering successully
-  socket.emit(EVENT_CLIENT_BULLET_REGISTERED, theBullet);
-  // emit to another clients the current player registered successfully
-  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REGISTERED, theBullet);
-};
-//--- disconnect
-export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
   data: Bullet
 ) => {
+  // map ClientBullet to the Bullet.
+  const bulletCloned = DeepClone(data);
+  // emit to another clients the current player registered successfully
+  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REGISTERED, bulletCloned);
+};
+//--- Remove bullet.
+export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
+  data: NetIdentity
+) => {
+  var dataCloned = DeepClone(data);
   // emit to another clients the bullet has removed.
-  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, data);
-  // then, remove out of the playlist.
-  removeBullet(bullets, data.id);
+  socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, dataCloned);
 };
 //#endregion
