@@ -58,7 +58,6 @@ import { FlipDirection, EyeSide } from './enums';
 export const onConnect2 = (socket: Socket) => (data: Connection) => {
   if (data.isServer) {
     socket.join(SERVER);
-    return;
   }
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
@@ -121,6 +120,12 @@ export const onDisconnect = (
   // then, remove out of playlist
   removePlayer(players, currentPlayer.id);
 };
+export const onRegisterPlayerFinished = (socket: Socket) => (
+  data: ClientRegistrarFinished
+) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED, dataCloned);
+};
 //--- register player
 export const onRegisterPlayer2 = (socket: Socket) => (
   data: ClientRegistrar
@@ -131,12 +136,6 @@ export const onRegisterPlayer2 = (socket: Socket) => (
   );
   const dataCloned = DeepClone(data);
   socket.broadcast.to(SERVER).emit(EVENT_REQUIRE_REGISTER_PLAYER, dataCloned);
-};
-export const onRegisterPlayerFinished = (socket: Socket) => (
-  data: ClientRegistrarFinished
-) => {
-  const dataCloned = DeepClone(data);
-  socket.broadcast.emit(EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED, dataCloned);
 };
 //@Obsolete, recommended using onRegisterPlayer2 instead.
 export const onRegisterPlayer = (
