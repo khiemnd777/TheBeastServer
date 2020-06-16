@@ -50,8 +50,15 @@ export const EVENT_REQUIRE_REGISTER_PLAYER = 'server register player';
 export const EVENT_REQUIRE_GETTING_PLAYERS = 'request getting players';
 export const EVENT_RESPONSE_GETTING_PLAYERS = 'response getting players';
 export const EVENT_DOWNLOAD_PLAYERS = 'download players';
-
 //#endregion
+
+//#region Fodder events
+export const EVENT_FODDER_CREATE = "fodder create";
+export const EVENT_FODDER_CREATE_SYNC = "fodder create sync";
+export const EVENT_FODDER_TRANSLATE = "fodder translate";
+export const EVENT_FODDER_TRANSLATE_SYNC = "fodder translate sync";
+//#endregion
+
 //#region Bullet events
 export const EVENT_BULLET_REGISTER = 'bullet register';
 export const EVENT_BULLET_REMOVE = 'bullet remove';

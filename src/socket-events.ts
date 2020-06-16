@@ -25,6 +25,8 @@ import {
   EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED,
   EVENT_REQUIRE_GETTING_PLAYERS,
   EVENT_DOWNLOAD_PLAYERS,
+  EVENT_FODDER_CREATE_SYNC,
+  EVENT_FODDER_TRANSLATE_SYNC,
 } from './constants';
 import {
   Player,
@@ -43,6 +45,7 @@ import {
   Connection,
   ClientRegistrarFinished,
   ReponseLoadingPlayer,
+  Fodder,
 } from './types';
 import {
   removePlayer,
@@ -285,8 +288,25 @@ export const onBulletRegister = (socket: Socket, bullets: Bullet[]) => (
 export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
   data: NetIdentity
 ) => {
-  var dataCloned = DeepClone(data);
+  const dataCloned = DeepClone(data);
   // emit to another clients the bullet has removed.
   socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, dataCloned);
+};
+//#endregion
+
+//#region
+export const onFodderCreate = (io: Server, socket: Socket) => (
+  data: Fodder
+) => {
+  const dataCloned = DeepClone(data);
+  console.log(`The Fodder ${data.id} has been created.`);
+  socket.broadcast.emit(EVENT_FODDER_CREATE_SYNC, dataCloned);
+};
+
+export const onFodderTranslate = (io: Server, socket: Socket) => (
+  data: Fodder
+) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_FODDER_TRANSLATE_SYNC, dataCloned);
 };
 //#endregion

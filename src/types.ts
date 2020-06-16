@@ -85,3 +85,7 @@ export type HpPicker = {
   position: number[];
   scale: number;
 };
+export type Fodder = {
+  id: number;
+  position: number[];
+};

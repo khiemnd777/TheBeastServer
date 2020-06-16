@@ -21,6 +21,8 @@ import {
   EVENT_HP_PICKER_CONSUME,
   EVENT_CLIENT_REGISTER_PLAYER_FINISHED,
   EVENT_RESPONSE_GETTING_PLAYERS,
+  EVENT_FODDER_CREATE,
+  EVENT_FODDER_TRANSLATE,
 } from './constants';
 import { Socket, Server } from 'socket.io';
 import {
@@ -44,6 +46,8 @@ import {
   onRegisterPlayerFinished,
   onLoadPlayers2,
   onResponseGettingPlayers,
+  onFodderCreate,
+  onFodderTranslate,
 } from './socket-events';
 
 //#region variables
@@ -106,6 +110,11 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   socket.on(EVENT_BULLET_REGISTER, onBulletRegister(socket, bullets));
   // remove the bullet
   socket.on(EVENT_BULLET_REMOVE, onBulletRemove(socket, bullets));
+  //#endregion
+
+  //#region Fodder
+  socket.on(EVENT_FODDER_CREATE, onFodderCreate(io, socket));
+  socket.on(EVENT_FODDER_TRANSLATE, onFodderTranslate(io, socket));
   //#endregion
 };
 
