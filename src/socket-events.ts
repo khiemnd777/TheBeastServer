@@ -27,6 +27,8 @@ import {
   EVENT_DOWNLOAD_PLAYERS,
   EVENT_FODDER_CREATE_SYNC,
   EVENT_FODDER_TRANSLATE_SYNC,
+  EVENT_FODDER_GETTING_ALL,
+  EVENT_FODDER_FETCHING,
 } from './constants';
 import {
   Player,
@@ -46,6 +48,7 @@ import {
   ClientRegistrarFinished,
   ReponseLoadingPlayer,
   Fodder,
+  FodderFetching,
 } from './types';
 import {
   removePlayer,
@@ -308,5 +311,19 @@ export const onFodderTranslate = (io: Server, socket: Socket) => (
 ) => {
   const dataCloned = DeepClone(data);
   socket.broadcast.emit(EVENT_FODDER_TRANSLATE_SYNC, dataCloned);
+};
+
+export const onFodderRequestLoading = (io: Server, socket: Socket) => () => {
+  console.log('- Request getting all the fodders:');
+  socket.broadcast
+    .to(SERVER)
+    .emit(EVENT_FODDER_GETTING_ALL, { socketId: socket.id });
+};
+
+export const onFodderSendGettingAll = (io: Server, socket: Socket) => (
+  data: FodderFetching
+) => {
+  const dataCloned = DeepClone(data) as FodderFetching;
+  io.to(dataCloned.socketId).emit(EVENT_FODDER_FETCHING, dataCloned);
 };
 //#endregion

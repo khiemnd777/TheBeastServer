@@ -24,17 +24,17 @@ export type ClientRegistrar = {
 export type ClientRegistrarFinished = {
   clientId: string;
   playerName: string;
-  id: number,
-  position: number[],
-  hp: number
+  id: number;
+  position: number[];
+  hp: number;
 };
 export type ReponseLoadingPlayer = {
   socketId: string;
   playerName: string;
-  id: number,
-  position: number[],
-  hp: number,
-  maxHp: number
+  id: number;
+  position: number[];
+  hp: number;
+  maxHp: number;
 };
 export type ClientPlayer = {
   name: string;
@@ -86,6 +86,11 @@ export type HpPicker = {
   scale: number;
 };
 export type Fodder = {
+  id: number;
+  position: number[];
+};
+export type FodderFetching = {
+  socketId: string;
   id: number;
   position: number[];
 };

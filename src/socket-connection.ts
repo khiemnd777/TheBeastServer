@@ -23,6 +23,8 @@ import {
   EVENT_RESPONSE_GETTING_PLAYERS,
   EVENT_FODDER_CREATE,
   EVENT_FODDER_TRANSLATE,
+  EVENT_FODDER_REQUEST_LOADING,
+  EVENT_FODDER_SEND_GETTING_ALL,
 } from './constants';
 import { Socket, Server } from 'socket.io';
 import {
@@ -48,6 +50,8 @@ import {
   onResponseGettingPlayers,
   onFodderCreate,
   onFodderTranslate,
+  onFodderRequestLoading,
+  onFodderSendGettingAll,
 } from './socket-events';
 
 //#region variables
@@ -115,6 +119,8 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   //#region Fodder
   socket.on(EVENT_FODDER_CREATE, onFodderCreate(io, socket));
   socket.on(EVENT_FODDER_TRANSLATE, onFodderTranslate(io, socket));
+  socket.on(EVENT_FODDER_REQUEST_LOADING, onFodderRequestLoading(io, socket));
+  socket.on(EVENT_FODDER_SEND_GETTING_ALL, onFodderSendGettingAll(io, socket));
   //#endregion
 };
 

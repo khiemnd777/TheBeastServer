@@ -53,10 +53,14 @@ export const EVENT_DOWNLOAD_PLAYERS = 'download players';
 //#endregion
 
 //#region Fodder events
-export const EVENT_FODDER_CREATE = "fodder create";
-export const EVENT_FODDER_CREATE_SYNC = "fodder create sync";
-export const EVENT_FODDER_TRANSLATE = "fodder translate";
-export const EVENT_FODDER_TRANSLATE_SYNC = "fodder translate sync";
+export const EVENT_FODDER_CREATE = 'fodder create';
+export const EVENT_FODDER_CREATE_SYNC = 'fodder create sync';
+export const EVENT_FODDER_TRANSLATE = 'fodder translate';
+export const EVENT_FODDER_TRANSLATE_SYNC = 'fodder translate sync';
+export const EVENT_FODDER_REQUEST_LOADING = 'fodder request loading';
+export const EVENT_FODDER_GETTING_ALL = 'fodder getting all';
+export const EVENT_FODDER_SEND_GETTING_ALL = 'fodder send getting all';
+export const EVENT_FODDER_FETCHING = 'fodder fetching';
 //#endregion
 
 //#region Bullet events
