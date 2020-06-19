@@ -25,6 +25,8 @@ import {
   EVENT_FODDER_TRANSLATE,
   EVENT_FODDER_REQUEST_LOADING,
   EVENT_FODDER_SEND_GETTING_ALL,
+  EVENT_FODDER_REMOVE,
+  EVENT_PLAYER_STORE_ID,
 } from './constants';
 import { Socket, Server } from 'socket.io';
 import {
@@ -52,6 +54,8 @@ import {
   onFodderTranslate,
   onFodderRequestLoading,
   onFodderSendGettingAll,
+  onFodderRemove,
+  onPlayerStoreId,
 } from './socket-events';
 
 //#region variables
@@ -75,14 +79,15 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   // connect
   socket.on(EVENT_CONNECT, onConnect2(socket));
   // disconnect
-  socket.on(EVENT_DISCONNECT, onDisconnect(socket, currentPlayer, players));
+  socket.on(EVENT_DISCONNECT, onDisconnect(io, socket, currentPlayer, players));
   // register player
   socket.on(EVENT_REGISTER, onRegisterPlayer2(socket));
   // register player finished.
   socket.on(
     EVENT_CLIENT_REGISTER_PLAYER_FINISHED,
-    onRegisterPlayerFinished(socket)
+    onRegisterPlayerFinished(socket, currentPlayer)
   );
+  socket.on(EVENT_PLAYER_STORE_ID, onPlayerStoreId(socket, currentPlayer));
   // player translates
   socket.on(
     EVENT_PLAYER_TRANSLATE,
@@ -121,6 +126,7 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   socket.on(EVENT_FODDER_TRANSLATE, onFodderTranslate(io, socket));
   socket.on(EVENT_FODDER_REQUEST_LOADING, onFodderRequestLoading(io, socket));
   socket.on(EVENT_FODDER_SEND_GETTING_ALL, onFodderSendGettingAll(io, socket));
+  socket.on(EVENT_FODDER_REMOVE, onFodderRemove(io, socket));
   //#endregion
 };
 

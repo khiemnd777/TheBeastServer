@@ -84,6 +84,7 @@ export type HpPicker = {
   targetPosition: number[];
   position: number[];
   scale: number;
+  hp: number;
 };
 export type Fodder = {
   id: number;

@@ -11,6 +11,7 @@ export const EVENT_REGISTER = 'register';
 //#endregion
 
 //#region Player events
+export const EVENT_PLAYER_STORE_ID = 'player store id';
 export const EVENT_PLAYER_TRANSLATE = 'player translate';
 export const EVENT_PLAYER_ROTATE = 'player rotate';
 export const EVENT_PLAYER_PLAY = 'play';
@@ -61,6 +62,8 @@ export const EVENT_FODDER_REQUEST_LOADING = 'fodder request loading';
 export const EVENT_FODDER_GETTING_ALL = 'fodder getting all';
 export const EVENT_FODDER_SEND_GETTING_ALL = 'fodder send getting all';
 export const EVENT_FODDER_FETCHING = 'fodder fetching';
+export const EVENT_FODDER_REMOVE = 'fodder remove';
+export const EVENT_FODDER_REMOVE_SYNC = 'fodder remove sync';
 //#endregion
 
 //#region Bullet events

@@ -29,6 +29,7 @@ import {
   EVENT_FODDER_TRANSLATE_SYNC,
   EVENT_FODDER_GETTING_ALL,
   EVENT_FODDER_FETCHING,
+  EVENT_FODDER_REMOVE_SYNC,
 } from './constants';
 import {
   Player,
@@ -51,7 +52,6 @@ import {
   FodderFetching,
 } from './types';
 import {
-  removePlayer,
   preparePlayer,
   registerClientPlayer,
   DeepClone,
@@ -114,22 +114,26 @@ export const onLoadPlayers = (
 };
 //--- disconnect
 export const onDisconnect = (
+  io: Server,
   socket: Socket,
   currentPlayer: Player,
   players: Player[]
 ) => () => {
-  console.log(
-    `disconnected: {name: ${currentPlayer.name}, id: ${currentPlayer.id}}`
-  );
+  console.log(`disconnected: {id: ${currentPlayer.id}}`);
   // emit to another clients the current player has disconnected
-  socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, currentPlayer);
-  // then, remove out of playlist
-  removePlayer(players, currentPlayer.id);
+  const netIdentity = { id: currentPlayer.id } as NetIdentity;
+  socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, netIdentity);
 };
-export const onRegisterPlayerFinished = (socket: Socket) => (
-  data: ClientRegistrarFinished
+export const onPlayerStoreId = (socket: Socket, currentPlayer: Player) => (
+  data: NetIdentity
 ) => {
-  const dataCloned = DeepClone(data);
+  currentPlayer.id = data.id;
+};
+export const onRegisterPlayerFinished = (
+  socket: Socket,
+  currentPlayer: Player
+) => (data: ClientRegistrarFinished) => {
+  const dataCloned = DeepClone(data) as ClientRegistrarFinished;
   socket.broadcast.emit(EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED, dataCloned);
 };
 //--- register player
@@ -240,7 +244,6 @@ export const onPlayerDie = (
   currentPlayer: Player,
   playerList: Player[]
 ) => (data: Player) => {
-  removePlayer(playerList, data.id);
   socket.broadcast.emit(EVENT_CLIENT_PLAYER_WAS_DEAD, data);
 };
 //--- player's hp
@@ -249,17 +252,15 @@ export const onPlayerHp = (
   currentPlayer: Player,
   playerList: Player[]
 ) => (data: Player) => {
-  const playerFound = getPlayer(playerList, data.id);
-  playerFound && (playerFound.hp = data.hp);
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_HP, data);
+  const dataCloned = DeepClone(data) as Player;
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_HP, dataCloned);
 };
 //--- player's max hp
 export const onPlayerMaxHp = (socket: Socket, playerList: Player[]) => (
   data: Player
 ) => {
-  const playerFound = getPlayer(playerList, data.id);
-  playerFound && (playerFound.maxHp = data.maxHp);
-  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_MAX_HP, data);
+  const dataCloned = DeepClone(data) as Player;
+  socket.broadcast.emit(EVENT_CLIENT_PLAYER_SYNC_MAX_HP, dataCloned);
 };
 //--- health poin picker
 export const onHpPicker = (socket: Socket) => (data: HpPicker) => {
@@ -325,5 +326,12 @@ export const onFodderSendGettingAll = (io: Server, socket: Socket) => (
 ) => {
   const dataCloned = DeepClone(data) as FodderFetching;
   io.to(dataCloned.socketId).emit(EVENT_FODDER_FETCHING, dataCloned);
+};
+
+export const onFodderRemove = (io: Server, socket: Socket) => (
+  data: NetIdentity
+) => {
+  const dataCloned = DeepClone(data) as NetIdentity;
+  socket.broadcast.emit(EVENT_FODDER_REMOVE_SYNC, dataCloned);
 };
 //#endregion
