@@ -30,6 +30,8 @@ import {
   EVENT_FODDER_GETTING_ALL,
   EVENT_FODDER_FETCHING,
   EVENT_FODDER_REMOVE_SYNC,
+  EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC,
+  EVENT_PLAYER_BREAK_PRESS_UP_SYNC,
 } from './constants';
 import {
   Player,
@@ -295,6 +297,18 @@ export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
   const dataCloned = DeepClone(data);
   // emit to another clients the bullet has removed.
   socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, dataCloned);
+};
+
+export const onPlayerBreakPressDown = (socket: Socket) => (
+  data: NetIdentity
+) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC, dataCloned);
+};
+
+export const onPlayerBreakPressUp = (socket: Socket) => (data: NetIdentity) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_PLAYER_BREAK_PRESS_UP_SYNC, dataCloned);
 };
 //#endregion
 

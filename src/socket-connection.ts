@@ -27,6 +27,8 @@ import {
   EVENT_FODDER_SEND_GETTING_ALL,
   EVENT_FODDER_REMOVE,
   EVENT_PLAYER_STORE_ID,
+  EVENT_PLAYER_BREAK_PRESS_DOWN,
+  EVENT_PLAYER_BREAK_PRESS_UP,
 } from './constants';
 import { Socket, Server } from 'socket.io';
 import {
@@ -56,6 +58,8 @@ import {
   onFodderSendGettingAll,
   onFodderRemove,
   onPlayerStoreId,
+  onPlayerBreakPressDown,
+  onPlayerBreakPressUp,
 } from './socket-events';
 
 //#region variables
@@ -119,6 +123,9 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   socket.on(EVENT_BULLET_REGISTER, onBulletRegister(socket, bullets));
   // remove the bullet
   socket.on(EVENT_BULLET_REMOVE, onBulletRemove(socket, bullets));
+
+  socket.on(EVENT_PLAYER_BREAK_PRESS_DOWN, onPlayerBreakPressDown(socket));
+  socket.on(EVENT_PLAYER_BREAK_PRESS_UP, onPlayerBreakPressUp(socket));
   //#endregion
 
   //#region Fodder

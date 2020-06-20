@@ -51,6 +51,12 @@ export const EVENT_REQUIRE_REGISTER_PLAYER = 'server register player';
 export const EVENT_REQUIRE_GETTING_PLAYERS = 'request getting players';
 export const EVENT_RESPONSE_GETTING_PLAYERS = 'response getting players';
 export const EVENT_DOWNLOAD_PLAYERS = 'download players';
+
+export const EVENT_PLAYER_BREAK_PRESS_DOWN = 'player break press down';
+export const EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC =
+  'player break press down sync';
+export const EVENT_PLAYER_BREAK_PRESS_UP = 'player break press up';
+export const EVENT_PLAYER_BREAK_PRESS_UP_SYNC = 'player break press up sync';
 //#endregion
 
 //#region Fodder events
