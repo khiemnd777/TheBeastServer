@@ -298,17 +298,21 @@ export const onBulletRemove = (socket: Socket, bullets: Bullet[]) => (
   // emit to another clients the bullet has removed.
   socket.broadcast.emit(EVENT_CLIENT_BULLET_OTHER_REMOVED, dataCloned);
 };
-
+//--- Player break press down.
 export const onPlayerBreakPressDown = (socket: Socket) => (
   data: NetIdentity
 ) => {
   const dataCloned = DeepClone(data);
-  socket.broadcast.emit(EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC, dataCloned);
+  socket.broadcast
+    .to(SERVER)
+    .emit(EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC, dataCloned);
 };
-
+//--- Player break press up.
 export const onPlayerBreakPressUp = (socket: Socket) => (data: NetIdentity) => {
   const dataCloned = DeepClone(data);
-  socket.broadcast.emit(EVENT_PLAYER_BREAK_PRESS_UP_SYNC, dataCloned);
+  socket.broadcast
+    .to(SERVER)
+    .emit(EVENT_PLAYER_BREAK_PRESS_UP_SYNC, dataCloned);
 };
 //#endregion
 
