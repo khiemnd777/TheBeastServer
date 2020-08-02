@@ -89,9 +89,16 @@ export type HpPicker = {
 export type Fodder = {
   id: number;
   position: number[];
+  rotation: number[];
 };
 export type FodderFetching = {
   socketId: string;
   id: number;
   position: number[];
 };
+
+export type FodderBullet = {
+  id: number;
+  position: number[];
+  rotation: number[];
+}

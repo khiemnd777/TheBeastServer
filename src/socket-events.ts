@@ -32,6 +32,8 @@ import {
   EVENT_FODDER_REMOVE_SYNC,
   EVENT_PLAYER_BREAK_PRESS_DOWN_SYNC,
   EVENT_PLAYER_BREAK_PRESS_UP_SYNC,
+  EVENT_FODDER_BULLET_CREATE_SYNC,
+  EVENT_FODDER_BULLET_REMOVE_SYNC,
 } from './constants';
 import {
   Player,
@@ -52,6 +54,7 @@ import {
   ReponseLoadingPlayer,
   Fodder,
   FodderFetching,
+  FodderBullet,
 } from './types';
 import {
   preparePlayer,
@@ -352,4 +355,19 @@ export const onFodderRemove = (io: Server, socket: Socket) => (
   const dataCloned = DeepClone(data) as NetIdentity;
   socket.broadcast.emit(EVENT_FODDER_REMOVE_SYNC, dataCloned);
 };
+
+export const onFodderBulletCreate = (io: Server, socket: Socket) => (
+  data: FodderBullet
+) => {
+  const dataCloned = DeepClone(data) as FodderBullet;
+  console.log('fodder bullet created:', dataCloned.id);
+  socket.broadcast.emit(EVENT_FODDER_BULLET_CREATE_SYNC, dataCloned);
+}
+
+export const onFodderBulletRemove = (io: Server, socket: Socket) => (
+  data: FodderBullet
+) => {
+  const dataCloned = DeepClone(data) as FodderBullet;
+  socket.broadcast.emit(EVENT_FODDER_BULLET_REMOVE_SYNC, dataCloned);
+}
 //#endregion

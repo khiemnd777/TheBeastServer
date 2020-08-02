@@ -70,6 +70,11 @@ export const EVENT_FODDER_SEND_GETTING_ALL = 'fodder send getting all';
 export const EVENT_FODDER_FETCHING = 'fodder fetching';
 export const EVENT_FODDER_REMOVE = 'fodder remove';
 export const EVENT_FODDER_REMOVE_SYNC = 'fodder remove sync';
+export const EVENT_FODDER_BULLET_CREATE = 'fodder create bullet';
+export const EVENT_FODDER_BULLET_REMOVE = 'fodder remove bullet';
+export const EVENT_FODDER_BULLET_CREATE_SYNC = 'fodder create bullet sync';
+export const EVENT_FODDER_BULLET_REMOVE_SYNC = 'fodder remove bullet sync';
+
 //#endregion
 
 //#region Bullet events

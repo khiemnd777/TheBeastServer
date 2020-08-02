@@ -29,6 +29,8 @@ import {
   EVENT_PLAYER_STORE_ID,
   EVENT_PLAYER_BREAK_PRESS_DOWN,
   EVENT_PLAYER_BREAK_PRESS_UP,
+  EVENT_FODDER_BULLET_CREATE,
+  EVENT_FODDER_BULLET_REMOVE,
 } from './constants';
 import { Socket, Server } from 'socket.io';
 import {
@@ -60,6 +62,8 @@ import {
   onPlayerStoreId,
   onPlayerBreakPressDown,
   onPlayerBreakPressUp,
+  onFodderBulletCreate,
+  onFodderBulletRemove,
 } from './socket-events';
 
 //#region variables
@@ -134,6 +138,8 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   socket.on(EVENT_FODDER_REQUEST_LOADING, onFodderRequestLoading(io, socket));
   socket.on(EVENT_FODDER_SEND_GETTING_ALL, onFodderSendGettingAll(io, socket));
   socket.on(EVENT_FODDER_REMOVE, onFodderRemove(io, socket));
+  socket.on(EVENT_FODDER_BULLET_CREATE, onFodderBulletCreate(io, socket));
+  socket.on(EVENT_FODDER_BULLET_REMOVE, onFodderBulletRemove(io, socket));
   //#endregion
 };
 
