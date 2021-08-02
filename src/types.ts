@@ -19,14 +19,18 @@ export type Player = {
 };
 export type ClientRegistrar = {
   clientId: string;
-  playerName: string;
+  prefabName: string;
+  netName: string;
 };
 export type ClientRegistrarFinished = {
   clientId: string;
-  playerName: string;
   id: number;
+  prefabName: string;
+  netName: string;
   position: number[];
-  hp: number;
+  rotation: number[];
+  life: number;
+  maxLife: number;
 };
 export type ReponseLoadingPlayer = {
   socketId: string;

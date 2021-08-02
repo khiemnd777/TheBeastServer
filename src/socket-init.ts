@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import socketIO from 'socket.io';
-import { onSocketConnection } from './socket-connection';
+import { onSocketConnection } from './socket-connection2';
 
 export function initSocket(port: number = 7777, path: string = 'socket.io') {
   const app = express();
