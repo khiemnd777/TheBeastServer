@@ -34,6 +34,7 @@ import {
   EVENT_PLAYER_BREAK_PRESS_UP_SYNC,
   EVENT_SERVER_REGISTER,
   EVENT_CLIENT_REGISTER_FINISHED,
+  EVENT_RECEIVE_EMIT_MESSAGE,
 } from "./constants";
 import {
   Player,
@@ -54,6 +55,7 @@ import {
   ReponseLoadingPlayer,
   Fodder,
   FodderFetching,
+  EmitMessage,
 } from "./types";
 import {
   preparePlayer,
@@ -132,10 +134,14 @@ export const onRegisterPlayerFinished =
       dataCloned
     );
   };
+export const onEmitMessage = (socket: Socket) => (data: EmitMessage) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
+};
 export const onRegister = (socket: Socket) => (data: ClientRegistrar) => {
   // map ClientPlayer to Player
   console.log(
-    `The client sent a request to create player 2: ${JSON.stringify(data)}`
+    `The client sent a request to create player: ${JSON.stringify(data)}`
   );
   const dataCloned = DeepClone(data);
   socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);

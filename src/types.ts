@@ -4,6 +4,12 @@ export type NetIdentity = {
 export type Connection = {
   isServer: boolean;
 };
+export type EmitMessage = {
+  clientId: string;
+  id: number;
+  eventName: string;
+  message: any;
+};
 export type Player = {
   id: number;
   name: string;

@@ -11,6 +11,8 @@ export const EVENT_REGISTER = 'register';
 export const EVENT_SERVER_REGISTER = 'server register';
 export const EVENT_SERVER_REGISTER_FINISHED = 'server register finished';
 export const EVENT_CLIENT_REGISTER_FINISHED = 'client register finished';
+export const EVENT_EMIT_MESSAGE = 'emit message';
+export const EVENT_RECEIVE_EMIT_MESSAGE = 'receive emit message';
 //#endregion
 
 //#region Player events

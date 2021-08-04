@@ -10,6 +10,7 @@ import {
   EVENT_RESPONSE_GETTING_PLAYERS,
   EVENT_PLAYER_STORE_ID,
   EVENT_SERVER_REGISTER_FINISHED,
+  EVENT_EMIT_MESSAGE,
 } from "./constants";
 import { Socket, Server } from "socket.io";
 import {
@@ -22,6 +23,7 @@ import {
   onPlayerStoreId,
   onRegisterFinished,
   onRegister,
+  onEmitMessage,
 } from "./socket-events";
 
 //#region variables
@@ -35,6 +37,7 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   // Declare the instance current player
   const currentPlayer: Player = instancePlayer();
   //#region events
+  socket.on(EVENT_EMIT_MESSAGE, onEmitMessage(socket));
   // init players
   socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers2(io, socket, players));
   socket.on(
