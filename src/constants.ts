@@ -13,6 +13,8 @@ export const EVENT_SERVER_REGISTER_FINISHED = 'server register finished';
 export const EVENT_CLIENT_REGISTER_FINISHED = 'client register finished';
 export const EVENT_EMIT_MESSAGE = 'emit message';
 export const EVENT_RECEIVE_EMIT_MESSAGE = 'receive emit message';
+export const EVENT_CLONE_EVERYWHERE = "clone everywhere";
+export const EVENT_BROADCAST_CLONE_EVERYWHERE = "broadcast clone everywhere";
 //#endregion
 
 //#region Player events

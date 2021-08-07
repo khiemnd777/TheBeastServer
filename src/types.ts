@@ -10,6 +10,33 @@ export type EmitMessage = {
   eventName: string;
   message: any;
 };
+export type ClientRegistrar = {
+  clientId: string;
+  prefabName: string;
+  netName: string;
+};
+
+export type ClientRegistrarFinished = {
+  clientId: string;
+  id: number;
+  prefabName: string;
+  netName: string;
+  position: number[];
+  rotation: number[];
+  life: number;
+  maxLife: number;
+};
+
+export type CloneEverywhere = {
+  clientId: string;
+  prefabName: string;
+  netName: string;
+  position: number[];
+  rotation: number[];
+  life: number;
+  maxLife: number;
+};
+
 export type Player = {
   id: number;
   name: string;
@@ -22,21 +49,6 @@ export type Player = {
   rightEye: number[];
   armRotation: number[];
   headRotation: number[];
-};
-export type ClientRegistrar = {
-  clientId: string;
-  prefabName: string;
-  netName: string;
-};
-export type ClientRegistrarFinished = {
-  clientId: string;
-  id: number;
-  prefabName: string;
-  netName: string;
-  position: number[];
-  rotation: number[];
-  life: number;
-  maxLife: number;
 };
 export type ReponseLoadingPlayer = {
   socketId: string;

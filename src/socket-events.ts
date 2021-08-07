@@ -35,6 +35,7 @@ import {
   EVENT_SERVER_REGISTER,
   EVENT_CLIENT_REGISTER_FINISHED,
   EVENT_RECEIVE_EMIT_MESSAGE,
+  EVENT_BROADCAST_CLONE_EVERYWHERE,
 } from "./constants";
 import {
   Player,
@@ -56,6 +57,7 @@ import {
   Fodder,
   FodderFetching,
   EmitMessage,
+  CloneEverywhere,
 } from "./types";
 import {
   preparePlayer,
@@ -77,6 +79,29 @@ export const onConnect2 = (socket: Socket) => (data: Connection) => {
 export const onConnect = (socket: Socket, players: Player[]) => () => {
   socket.emit(EVENT_CLIENT_CONNECTED);
 };
+
+export const onEmitMessage = (socket: Socket) => (data: EmitMessage) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
+};
+export const onRegister = (socket: Socket) => (data: ClientRegistrar) => {
+  // map ClientPlayer to Player
+  console.log(
+    `The client sent a request to create player: ${JSON.stringify(data)}`
+  );
+  const dataCloned = DeepClone(data);
+  socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
+};
+export const onCloneEverywhere = (socket: Socket) => (data: CloneEverywhere) => {
+  const dataCloned = DeepClone(data);
+  socket.broadcast.emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
+};
+export const onRegisterFinished =
+  (socket: Socket) => (data: ClientRegistrarFinished) => {
+    const dataCloned = DeepClone(data) as ClientRegistrarFinished;
+    socket.broadcast.emit(EVENT_CLIENT_REGISTER_FINISHED, dataCloned);
+  };
+
 //--- load players
 export const onLoadPlayers2 =
   (io: Server, socket: Socket, players: Player[]) => () => {
@@ -133,23 +158,6 @@ export const onRegisterPlayerFinished =
       EVENT_CLIENT_SYNC_REGISTER_PLAYER_FINISHED,
       dataCloned
     );
-  };
-export const onEmitMessage = (socket: Socket) => (data: EmitMessage) => {
-  const dataCloned = DeepClone(data);
-  socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
-};
-export const onRegister = (socket: Socket) => (data: ClientRegistrar) => {
-  // map ClientPlayer to Player
-  console.log(
-    `The client sent a request to create player: ${JSON.stringify(data)}`
-  );
-  const dataCloned = DeepClone(data);
-  socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
-};
-export const onRegisterFinished =
-  (socket: Socket) => (data: ClientRegistrarFinished) => {
-    const dataCloned = DeepClone(data) as ClientRegistrarFinished;
-    socket.broadcast.emit(EVENT_CLIENT_REGISTER_FINISHED, dataCloned);
   };
 //--- register player
 export const onRegisterPlayer2 =

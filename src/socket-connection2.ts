@@ -11,6 +11,7 @@ import {
   EVENT_PLAYER_STORE_ID,
   EVENT_SERVER_REGISTER_FINISHED,
   EVENT_EMIT_MESSAGE,
+  EVENT_CLONE_EVERYWHERE,
 } from "./constants";
 import { Socket, Server } from "socket.io";
 import {
@@ -24,6 +25,7 @@ import {
   onRegisterFinished,
   onRegister,
   onEmitMessage,
+  onCloneEverywhere,
 } from "./socket-events";
 
 //#region variables
@@ -38,6 +40,9 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   const currentPlayer: Player = instancePlayer();
   //#region events
   socket.on(EVENT_EMIT_MESSAGE, onEmitMessage(socket));
+  socket.on(EVENT_REGISTER, onRegister(socket));
+  socket.on(EVENT_CLONE_EVERYWHERE, onCloneEverywhere(socket));
+
   // init players
   socket.on(EVENT_LOAD_PLAYERS, onLoadPlayers2(io, socket, players));
   socket.on(
@@ -48,8 +53,6 @@ export const onSocketConnection = (io: Server) => (socket: Socket) => {
   socket.on(EVENT_CONNECT, onConnect2(socket));
   // disconnect
   socket.on(EVENT_DISCONNECT, onDisconnect(io, socket, currentPlayer, players));
-  // register player
-  socket.on(EVENT_REGISTER, onRegister(socket));
   // register player finished.
   socket.on(
     EVENT_CLIENT_REGISTER_PLAYER_FINISHED,
