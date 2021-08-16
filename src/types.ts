@@ -1,6 +1,9 @@
 export type NetIdentity = {
   id: number;
 };
+export type NetClientId = {
+  clientId: string;
+}
 export type Connection = {
   isServer: boolean;
 };
