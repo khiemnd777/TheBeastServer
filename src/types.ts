@@ -38,6 +38,7 @@ export type CloneEverywhere = {
   rotation: number[];
   life: number;
   maxLife: number;
+  lifetime: number;
 };
 
 export type Player = {
