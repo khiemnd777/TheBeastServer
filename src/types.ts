@@ -1,9 +1,15 @@
+export type ClientInformation = {
+  id: number;
+  clientId: string;
+  isServer: boolean;
+};
+
 export type NetIdentity = {
   id: number;
 };
 export type NetClientId = {
   clientId: string;
-}
+};
 export type Connection = {
   isServer: boolean;
 };
@@ -43,6 +49,7 @@ export type CloneEverywhere = {
 
 export type Player = {
   id: number;
+  clientId: string;
   name: string;
   hp: number;
   maxHp: number;

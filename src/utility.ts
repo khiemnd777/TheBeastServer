@@ -1,4 +1,4 @@
-import { Player, ClientPlayer, Bullet, ClientBullet } from './types';
+import { Player, Bullet, ClientBullet } from './types';
 import { Iditifier } from './identifier';
 
 function ArrayPush(array: any[], element: any) {
@@ -17,22 +17,6 @@ export function registerClientBullet(list: Bullet[], data: Bullet) {
   ArrayPush(list, data);
 }
 
-export function preparePlayer({ name }: ClientPlayer): Player {
-  return {
-    id: Iditifier.raw(),
-    name: name,
-    hp: 300,
-    maxHp: 300,
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-    flipXSign: 1,
-    leftEye: [0, 0, 0],
-    rightEye: [0, 0, 0],
-    armRotation: [0, 0, 0],
-    headRotation: [0, 0, 0],
-  };
-}
-
 export function prepareBullet({
   playerId,
   position,
@@ -49,6 +33,7 @@ export function prepareBullet({
 export function instancePlayer(): Player {
   return {
     id: Iditifier.EMPTY,
+    clientId: '',
     name: 'unknown',
     hp: 300,
     maxHp: 300,

@@ -1,4 +1,3 @@
-import { Socket, Server } from "socket.io";
 import {
   EVENT_CLIENT_CONNECTED,
   EVENT_CLIENT_OTHER_DISCONNECTED,
@@ -7,9 +6,10 @@ import {
   EVENT_CLIENT_REGISTER_FINISHED,
   EVENT_RECEIVE_EMIT_MESSAGE,
   EVENT_BROADCAST_CLONE_EVERYWHERE,
+  EVENT_SERVER_DISCONNECTED,
 } from "./constants";
+import { SocketConnection } from "./socket-connection";
 import {
-  Player,
   NetIdentity,
   ClientRegistrar,
   Connection,
@@ -21,42 +21,53 @@ import { DeepClone } from "./utility";
 
 //#region define events
 //--- connect
-export const onConnect = (socket: Socket) => (data: Connection) => {
-  if (data.isServer) {
-    console.log(`The server connects to socket.`);
-    socket.join(SERVER);
-  }
-  socket.emit(EVENT_CLIENT_CONNECTED);
-};
-export const onEmitMessage = (socket: Socket) => (data: EmitMessage) => {
+export const onConnect =
+  (connection: SocketConnection) => (data: Connection) => {
+    if (data.isServer) {
+      console.log(`The server connects to socket.`);
+      connection.client.isServer = true;
+      connection.socket.join(SERVER);
+    }
+    connection.socket.emit(EVENT_CLIENT_CONNECTED);
+  };
+export const onEmitMessage = (connection: SocketConnection) => (data: EmitMessage) => {
   const dataCloned = DeepClone(data);
-  socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
+  connection.socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
 };
-export const onRegister = (socket: Socket) => (data: ClientRegistrar) => {
+export const onRegister = (connection: SocketConnection) => (data: ClientRegistrar) => {
   // map ClientPlayer to Player
   console.log(
     `The client sent a request to create player: ${JSON.stringify(data)}`
   );
-  const dataCloned = DeepClone(data);
-  socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
+  const dataCloned = DeepClone(data) as ClientRegistrar;
+  connection.socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
 };
 export const onCloneEverywhere =
-  (socket: Socket) => (data: CloneEverywhere) => {
+  (connection: SocketConnection) => (data: CloneEverywhere) => {
     const dataCloned = DeepClone(data);
-    socket.broadcast.emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
+    connection.socket.broadcast.emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
   };
 export const onRegisterFinished =
-  (socket: Socket) => (data: ClientRegistrarFinished) => {
+  (connection: SocketConnection) =>
+  (data: ClientRegistrarFinished) => {
     const dataCloned = DeepClone(data) as ClientRegistrarFinished;
-    socket.broadcast.emit(EVENT_CLIENT_REGISTER_FINISHED, dataCloned);
+    // Assign current player after registering finished.
+    connection.client.clientId = dataCloned.clientId;
+    connection.client.id = dataCloned.id;
+    connection.client.isServer = false;
+    connection.socket.broadcast.emit(EVENT_CLIENT_REGISTER_FINISHED, dataCloned);
   };
 
 //--- disconnect
 export const onDisconnect =
-  (io: Server, socket: Socket, currentPlayer: Player, players: Player[]) =>
-  () => {
-    console.log(`disconnected: {id: ${currentPlayer.id}}`);
+  (connection: SocketConnection) => () => {
+    if (connection.client.isServer) {
+      console.log(`The server is disconnected.`);
+      connection.socket.broadcast.emit(EVENT_SERVER_DISCONNECTED);
+      return;
+    }
+    console.log(`disconnected: {id: ${connection.client.id}}`);
     // emit to another clients the current player has disconnected
-    const netIdentity = { id: currentPlayer.id } as NetIdentity;
-    socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, netIdentity);
+    const netIdentity = { id: connection.client.id } as NetIdentity;
+    connection.socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, netIdentity);
   };
