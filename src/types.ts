@@ -18,6 +18,7 @@ export type EmitMessage = {
   id: number;
   eventName: string;
   message: any;
+  onlyServer: boolean;
 };
 export type ClientRegistrar = {
   clientId: string;

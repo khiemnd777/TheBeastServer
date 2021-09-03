@@ -64,7 +64,13 @@ export class SocketConnection {
       this.socket.broadcast.emit(EVENT_CLIENT_OTHER_DISCONNECTED, netIdentity);
     });
     this.socket.on(EVENT_EMIT_MESSAGE, (data: EmitMessage) => {
-      const dataCloned = DeepClone(data);
+      const dataCloned = DeepClone(data) as EmitMessage;
+      if (dataCloned.onlyServer) {
+        this.socket.broadcast
+          .to(SERVER)
+          .emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
+        return;
+      }
       this.socket.broadcast.emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
     });
     this.socket.on(EVENT_REGISTER, (data: ClientRegistrar) => {
