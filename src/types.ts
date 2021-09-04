@@ -1,6 +1,8 @@
 export type ClientInformation = {
   id: number;
   clientId: string;
+  roomId: string;
+  roomMasterId: string;
   isServer: boolean;
 };
 
@@ -12,6 +14,9 @@ export type NetClientId = {
 };
 export type Connection = {
   isServer: boolean;
+};
+export type ServerConnection = {
+  roomId: string;
 };
 export type EmitMessage = {
   clientId: string;

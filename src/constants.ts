@@ -3,6 +3,7 @@ export const CONNECTION_PATH = "/thebeast";
 export const SAME_SIDE = "same-side";
 export const EXTERNAL_SIDE = "external-side";
 export const SERVER = "server";
+export const LOBBY = "lobby";
 
 //#region Server events
 export const EVENT_CONNECT = "connect";

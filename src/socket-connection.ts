@@ -41,6 +41,8 @@ export class SocketConnection {
     } as ClientInformation;
     this.io = io;
     this.socket = socket;
+    console.log(`Instance the socket with id: ${this.socket.id}`);
+    console.log(` - The client id: ${this.socket.client.id}`);
     this.init();
   }
   init() {
@@ -50,6 +52,8 @@ export class SocketConnection {
         this.client.isServer = true;
         this.socket.join(SERVER);
       }
+      console.log(`Connect to socket for socket id: ${this.socket.id}`);
+      console.log(` - The client id: ${this.socket.client.id}`);
       this.socket.emit(EVENT_CLIENT_CONNECTED);
     });
     this.socket.on(EVENT_DISCONNECT, () => {
