@@ -103,10 +103,13 @@ export class SocketConnection2 {
         return;
       }
       console.log(`disconnected: {id: ${this.client.id}}`);
-      // Checkout to room
+      // Check-out to room
       await this.manager.CheckOutToRoom(
         this.client.roomId,
         this.client.clientId
+      );
+      console.log(
+        `The rooms information: ${JSON.stringify(this.manager.roomsList)}`
       );
       // emit to another clients the current player has disconnected
       const netIdentity = { id: this.client.id } as NetIdentity;
@@ -139,6 +142,11 @@ export class SocketConnection2 {
       console.log(`Register with client-id: ${dataCloned.clientId}`);
       // Get available room
       let availableRooms = await this.manager.GetAvailableRooms();
+      console.log(
+        `The available rooms list has found: ${JSON.stringify(
+          availableRooms
+        )}`
+      );
       // If not found any available room
       if (!availableRooms.length) {
         // Generate a new room
@@ -157,20 +165,26 @@ export class SocketConnection2 {
           this.socket.to(LOBBY).emit("room_not_found", dataCloned);
           return;
         }
-        const availableRoom = this.manager.GetAvailableRoom(availableRooms);
-        console.log(` - The available room: ${JSON.stringify(availableRoom)}`);
-        if (availableRoom) {
-          await this.manager.CheckInToRoom(availableRoom, dataCloned.clientId);
-          this.client.roomId = availableRoom.id;
-          this.client.roomMasterId = `${MASTER}.${availableRoom.id}`;
-          this.socket.leave(LOBBY).join(this.client.roomId);
-          this.socket.broadcast
-            .to(this.client.roomMasterId)
-            .emit(EVENT_SERVER_REGISTER, dataCloned);
-          return;
-        }
-        this.socket.to(LOBBY).emit("room_not_found", dataCloned);
       }
+      const availableRoom = this.manager.GetAvailableRoom(availableRooms);
+      console.log(` - The available room: ${JSON.stringify(availableRoom)}`);
+      if (availableRoom) {
+        // Check-in to the available room
+        await this.manager.CheckInToRoom(availableRoom, dataCloned.clientId);
+
+        console.log(
+          `The rooms information: ${JSON.stringify(this.manager.roomsList)}`
+        );
+
+        this.client.roomId = availableRoom.id;
+        this.client.roomMasterId = `${MASTER}.${availableRoom.id}`;
+        this.socket.leave(LOBBY).join(this.client.roomId);
+        this.socket.broadcast
+          .to(this.client.roomMasterId)
+          .emit(EVENT_SERVER_REGISTER, dataCloned);
+        return;
+      }
+      this.socket.to(LOBBY).emit("room_not_found", dataCloned);
     });
 
     this.socket.on(

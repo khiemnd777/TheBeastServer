@@ -92,7 +92,7 @@ export class RoomDivisionManager {
   }
 
   async GetAvailableRooms() {
-    return lock.acquire([ROOM_INTERACTION], () => {
+    return lock.acquire(ROOM_INTERACTION, () => {
       return this.roomsList.filter(
         (room) => room.clientsList.length < room.max
       );
@@ -107,30 +107,28 @@ export class RoomDivisionManager {
   }
 
   GetRoomById(roomId: string) {
-    return lock.acquire([ROOM_INTERACTION], () => {
+    console.log(`Get room by room-id: ${roomId}`);
+    return lock.acquire(ROOM_INTERACTION, () => {
+      console.log(` - Start getting room: ${JSON.stringify(this.roomsList)}`);
       return this.roomsList.find((room) => room.id === roomId);
     });
   }
 
   CheckInToRoom(room: Room, guestId: string) {
-    return lock.acquire(
-      [ROOM_INTERACTION, `${ROOM_INTERACTION}.${room.id}`],
-      () => {
-        room && room.clientsList.push(guestId);
-      }
-    );
+    return lock.acquire(`${ROOM_INTERACTION}.${room.id}`, () => {
+      room && room.clientsList.push(guestId);
+    });
   }
 
   CheckOutToRoom(roomId: string, guestId: string) {
-    return lock.acquire(
-      [ROOM_INTERACTION, `${ROOM_INTERACTION}.${roomId}`],
-      async () => {
-        const room = await this.GetRoomById(roomId);
-        const checkedOutIndex = room.clientsList.indexOf(guestId);
-        if (checkedOutIndex > -1) {
-          room.clientsList.splice(checkedOutIndex, 1);
-        }
+    return lock.acquire(`${ROOM_INTERACTION}.${roomId}`, async () => {
+      console.log(`Check-out for roomId: ${roomId} and guestId: ${guestId}`);
+      const room = await this.GetRoomById(roomId);
+      console.log(` - Room: ${JSON.stringify(room)}`);
+      const checkedOutIndex = room.clientsList.indexOf(guestId);
+      if (checkedOutIndex > -1) {
+        room.clientsList.splice(checkedOutIndex, 1);
       }
-    );
+    });
   }
 }
