@@ -26,7 +26,10 @@ export function initSocket(port: number = 7777, path: string = "socket.io") {
 
   // Close all the rooms before terminating the application
   process.on("SIGINT", async () => {
+    console.log(`The application is terminating:`);
+    console.log(` - Closes all of the rooms`);
     await roomDivisionManager.CloseAllRooms();
+    console.log(` - Exits`);
     process.exit(0);
   });
 }

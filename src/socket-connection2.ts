@@ -15,7 +15,7 @@ import {
   EVENT_SERVER_REGISTER_FINISHED,
   EVENT_EMIT_MESSAGE,
   EVENT_CLONE_EVERYWHERE,
-  SERVER,
+  MASTER,
   EVENT_CLIENT_CONNECTED,
   EVENT_SERVER_DISCONNECTED,
   EVENT_CLIENT_OTHER_DISCONNECTED,
@@ -51,34 +51,49 @@ export class SocketConnection2 {
     this.init();
   }
   init() {
+    /*
+     *  Server-side connects to the socket.
+     */
     this.socket.on("server_connect", async (data: ServerConnection) => {
       console.log(`The server connects to socket.`);
+      console.log(` - The room id: ${data.roomId}`);
       this.client.isServer = true;
       this.client.roomId = `${data.roomId}`;
-      this.client.roomMasterId = `${SERVER}.${data.roomId}`;
+      this.client.roomMasterId = `${MASTER}.${data.roomId}`;
       // Stores the generated room
-      await this.manager.CreateRoom(data.roomId);
+      await this.manager.CreateRoom(this.client.roomId);
+      console.log(
+        ` - The room master ${this.client.roomMasterId} has been requested`
+      );
+      console.log(` - The room ${this.client.roomId} has been generated`);
       // Join to the room as master role.
-      this.socket.join(this.client.roomMasterId);
-      this.socket.emit("server_connected");
+      this.socket.join(this.client.roomMasterId).emit("server_connected");
     });
 
+    /*
+     *  Client-side connects to the socket.
+     */
     this.socket.on("client_connect", (data: Connection) => {
       // join to the lobby after the connection established.
-      this.socket.join(LOBBY);
-      this.socket.emit("client_connected");
+      console.log(`The client connects to socket.`);
+      this.socket.join(LOBBY).emit("client_connected");
     });
 
-    // [deprecated]
+    /*
+     *  [deprecated] Client-side connects to the socket.
+     */
     this.socket.on(EVENT_CONNECT, (data: Connection) => {
       if (data.isServer) {
         console.log(`The server connects to socket.`);
         this.client.isServer = true;
-        this.socket.join(SERVER);
+        this.socket.join(MASTER);
       }
       this.socket.emit(EVENT_CLIENT_CONNECTED);
     });
 
+    /*
+     *  Disconnect from client/server-side
+     */
     this.socket.on(EVENT_DISCONNECT, () => {
       if (this.client.isServer) {
         console.log(`The server is disconnected.`);
@@ -122,24 +137,28 @@ export class SocketConnection2 {
       if (!availableRooms.length) {
         // Generate a new room
         // Request a new room master
-        this.manager.CreateRoomMaster();
+        console.log(`Request a room master.`);
+        await this.manager.CreateRoomMaster();
         // Search available rooms with attempting
+        console.log(`Searching available rooms.`);
         availableRooms = await this.manager.SearchAvailableRooms();
+        console.log(`The available rooms list has found: ${JSON.stringify(availableRooms)}`);
         if (!availableRooms.length) {
-          this.socket.broadcast.to(LOBBY).emit("room_not_found", dataCloned);
+          this.socket.to(LOBBY).emit("room_not_found", dataCloned);
           return;
         }
         const availableRoom = this.manager.GetAvailableRoom(availableRooms);
+        console.log(` - The available room: ${JSON.stringify(availableRoom)}`);
         if (availableRoom) {
           this.client.roomId = availableRoom.id;
-          this.client.roomMasterId = `${SERVER}.${availableRoom.id}`;
+          this.client.roomMasterId = `${MASTER}.${availableRoom.id}`;
           this.socket.leave(LOBBY).join(this.client.roomId);
           this.socket.broadcast
             .to(this.client.roomMasterId)
             .emit(EVENT_SERVER_REGISTER, dataCloned);
           return;
         }
-        this.socket.broadcast.to(LOBBY).emit("room_not_found", dataCloned);
+        this.socket.to(LOBBY).emit("room_not_found", dataCloned);
       }
     });
 

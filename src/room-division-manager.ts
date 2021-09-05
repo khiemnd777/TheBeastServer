@@ -8,6 +8,7 @@ export const MAX_NUMBER_IN_ROOM = 50;
 export const ROOM_INTERACTION = "room_interaction";
 export const CLIENT_INTERACTION = "client_interaction";
 export const ROOM_MASTER_INTERACTION = "room_master_interaction";
+export const ROOM_MASTER_PATH = `C:/Works/project_game_code_blue/build/Server/TheBeast.exe`;
 
 const lock = new AsyncLock();
 
@@ -20,6 +21,8 @@ export class RoomDivisionManager {
   constructor(io: Server) {
     this.io = io;
     this.clientsList = [];
+    this.roomsList = [];
+    this.roomMatersList = [];
   }
 
   AddClient(client: Socket) {
@@ -45,7 +48,19 @@ export class RoomDivisionManager {
 
   CreateRoomMaster() {
     return lock.acquire(ROOM_MASTER_INTERACTION, () => {
-      const subprocess = spawn("TheBeast");
+      const subprocess = spawn(ROOM_MASTER_PATH);
+      subprocess.stdout.on("data", (data) => {
+        console.log(`stdout: ${data.toString()}`);
+      });
+
+      subprocess.stderr.on("data", (data) => {
+        console.log(`stderr: ${data.toString()}`);
+      });
+
+      subprocess.on("exit", (code) => {
+        console.log(`child process exited with code ${code.toString()}`);
+      });
+
       this.roomMatersList.push(subprocess);
       return subprocess;
     });
@@ -64,6 +79,7 @@ export class RoomDivisionManager {
   }
 
   async SearchAvailableRooms(attempt = 0, maxAttempt = 5): Promise<Room[]> {
+    console.log(` - Searches in ${attempt} time(s).`);
     if (attempt === maxAttempt) {
       return [];
     }
@@ -84,7 +100,8 @@ export class RoomDivisionManager {
   }
 
   GetAvailableRoom(availableRooms: Room[]) {
-    const randomIndex = random.int(0, availableRooms.length);
+    const randomIndex = random.int(0, availableRooms.length - 1);
+    console.log(` - Generated random index: ${randomIndex}`);
     const availableRoom = availableRooms[randomIndex];
     return availableRoom;
   }

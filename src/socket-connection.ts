@@ -14,7 +14,7 @@ import {
   EVENT_SERVER_REGISTER_FINISHED,
   EVENT_EMIT_MESSAGE,
   EVENT_CLONE_EVERYWHERE,
-  SERVER,
+  MASTER,
   EVENT_CLIENT_CONNECTED,
   EVENT_SERVER_DISCONNECTED,
   EVENT_CLIENT_OTHER_DISCONNECTED,
@@ -50,7 +50,7 @@ export class SocketConnection {
       if (data.isServer) {
         console.log(`The server connects to socket.`);
         this.client.isServer = true;
-        this.socket.join(SERVER);
+        this.socket.join(MASTER);
       }
       console.log(`Connect to socket for socket id: ${this.socket.id}`);
       console.log(` - The client id: ${this.socket.client.id}`);
@@ -71,7 +71,7 @@ export class SocketConnection {
       const dataCloned = DeepClone(data) as EmitMessage;
       if (dataCloned.onlyServer) {
         this.socket.broadcast
-          .to(SERVER)
+          .to(MASTER)
           .emit(EVENT_RECEIVE_EMIT_MESSAGE, dataCloned);
         return;
       }
@@ -79,7 +79,7 @@ export class SocketConnection {
     });
     this.socket.on(EVENT_REGISTER, (data: ClientRegistrar) => {
       const dataCloned = DeepClone(data) as ClientRegistrar;
-      this.socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
+      this.socket.broadcast.to(MASTER).emit(EVENT_SERVER_REGISTER, dataCloned);
     });
     this.socket.on(EVENT_CLONE_EVERYWHERE, (data: CloneEverywhere) => {
       const dataCloned = DeepClone(data);
