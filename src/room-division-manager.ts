@@ -92,7 +92,7 @@ export class RoomDivisionManager {
   }
 
   async GetAvailableRooms() {
-    return lock.acquire([ROOM_INTERACTION, CLIENT_INTERACTION], () => {
+    return lock.acquire([ROOM_INTERACTION], () => {
       return this.roomsList.filter(
         (room) => room.clientsList.length < room.max
       );
@@ -104,5 +104,33 @@ export class RoomDivisionManager {
     console.log(` - Generated random index: ${randomIndex}`);
     const availableRoom = availableRooms[randomIndex];
     return availableRoom;
+  }
+
+  GetRoomById(roomId: string) {
+    return lock.acquire([ROOM_INTERACTION], () => {
+      return this.roomsList.find((room) => room.id === roomId);
+    });
+  }
+
+  CheckInToRoom(room: Room, guestId: string) {
+    return lock.acquire(
+      [ROOM_INTERACTION, `${ROOM_INTERACTION}.${room.id}`],
+      () => {
+        room && room.clientsList.push(guestId);
+      }
+    );
+  }
+
+  CheckOutToRoom(roomId: string, guestId: string) {
+    return lock.acquire(
+      [ROOM_INTERACTION, `${ROOM_INTERACTION}.${roomId}`],
+      async () => {
+        const room = await this.GetRoomById(roomId);
+        const checkedOutIndex = room.clientsList.indexOf(guestId);
+        if (checkedOutIndex > -1) {
+          room.clientsList.splice(checkedOutIndex, 1);
+        }
+      }
+    );
   }
 }

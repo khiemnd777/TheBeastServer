@@ -94,7 +94,7 @@ export class SocketConnection2 {
     /*
      *  Disconnect from client/server-side
      */
-    this.socket.on(EVENT_DISCONNECT, () => {
+    this.socket.on(EVENT_DISCONNECT, async () => {
       if (this.client.isServer) {
         console.log(`The server is disconnected.`);
         this.socket.broadcast
@@ -103,6 +103,11 @@ export class SocketConnection2 {
         return;
       }
       console.log(`disconnected: {id: ${this.client.id}}`);
+      // Checkout to room
+      await this.manager.CheckOutToRoom(
+        this.client.roomId,
+        this.client.clientId
+      );
       // emit to another clients the current player has disconnected
       const netIdentity = { id: this.client.id } as NetIdentity;
       this.socket.broadcast
@@ -131,6 +136,7 @@ export class SocketConnection2 {
 
     this.socket.on(EVENT_REGISTER, async (data: ClientRegistrar) => {
       const dataCloned = DeepClone(data) as ClientRegistrar;
+      console.log(`Register with client-id: ${dataCloned.clientId}`);
       // Get available room
       let availableRooms = await this.manager.GetAvailableRooms();
       // If not found any available room
@@ -142,7 +148,11 @@ export class SocketConnection2 {
         // Search available rooms with attempting
         console.log(`Searching available rooms.`);
         availableRooms = await this.manager.SearchAvailableRooms();
-        console.log(`The available rooms list has found: ${JSON.stringify(availableRooms)}`);
+        console.log(
+          `The available rooms list has found: ${JSON.stringify(
+            availableRooms
+          )}`
+        );
         if (!availableRooms.length) {
           this.socket.to(LOBBY).emit("room_not_found", dataCloned);
           return;
@@ -150,6 +160,7 @@ export class SocketConnection2 {
         const availableRoom = this.manager.GetAvailableRoom(availableRooms);
         console.log(` - The available room: ${JSON.stringify(availableRoom)}`);
         if (availableRoom) {
+          await this.manager.CheckInToRoom(availableRoom, dataCloned.clientId);
           this.client.roomId = availableRoom.id;
           this.client.roomMasterId = `${MASTER}.${availableRoom.id}`;
           this.socket.leave(LOBBY).join(this.client.roomId);
@@ -177,6 +188,9 @@ export class SocketConnection2 {
       (data: ClientRegistrarFinished) => {
         const dataCloned = DeepClone(data) as ClientRegistrarFinished;
         // Assign current player after registering finished.
+        console.log(
+          `Locally registering finished with client-id: ${dataCloned.clientId}`
+        );
         this.client.clientId = dataCloned.clientId;
         this.client.id = dataCloned.id;
         this.client.isServer = false;
