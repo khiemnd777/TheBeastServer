@@ -6,6 +6,7 @@ import {
   Connection,
   EmitMessage,
   NetIdentity,
+  Score,
   ServerConnection,
 } from "./types";
 import {
@@ -211,13 +212,21 @@ export class SocketConnection2 {
       }
     );
     this.socket.on(EVENT_CLONE_EVERYWHERE, (data: CloneEverywhere) => {
-      const dataCloned = DeepClone(data);
+      const dataCloned = DeepClone(data) as CloneEverywhere;
       this.socket.broadcast
         .to(this.client.roomId)
         .emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
       this.socket.broadcast
         .to(this.client.roomMasterId)
         .emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
+    });
+    this.socket.on("score", (data: Score) => {
+      // join to the lobby after the connection established.
+      console.log(`The player with net id ${data.playerNetId} is scored: ${data.score}`);
+      const dataCloned = DeepClone(data) as Score;
+      this.socket.broadcast
+        .to(this.client.roomId)
+        .emit('score_broadcast', dataCloned);
     });
   }
 }
