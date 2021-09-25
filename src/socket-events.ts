@@ -1,7 +1,7 @@
 import {
   EVENT_CLIENT_CONNECTED,
   EVENT_CLIENT_OTHER_DISCONNECTED,
-  SERVER,
+  MASTER,
   EVENT_SERVER_REGISTER,
   EVENT_CLIENT_REGISTER_FINISHED,
   EVENT_RECEIVE_EMIT_MESSAGE,
@@ -26,7 +26,7 @@ export const onConnect =
     if (data.isServer) {
       console.log(`The server connects to socket.`);
       connection.client.isServer = true;
-      connection.socket.join(SERVER);
+      connection.socket.join(MASTER);
     }
     connection.socket.emit(EVENT_CLIENT_CONNECTED);
   };
@@ -40,7 +40,7 @@ export const onRegister = (connection: SocketConnection) => (data: ClientRegistr
     `The client sent a request to create player: ${JSON.stringify(data)}`
   );
   const dataCloned = DeepClone(data) as ClientRegistrar;
-  connection.socket.broadcast.to(SERVER).emit(EVENT_SERVER_REGISTER, dataCloned);
+  connection.socket.broadcast.to(MASTER).emit(EVENT_SERVER_REGISTER, dataCloned);
 };
 export const onCloneEverywhere =
   (connection: SocketConnection) => (data: CloneEverywhere) => {

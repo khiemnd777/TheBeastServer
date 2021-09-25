@@ -1,6 +1,8 @@
 export type ClientInformation = {
   id: number;
   clientId: string;
+  roomId: string;
+  roomMasterId: string;
   isServer: boolean;
 };
 
@@ -12,6 +14,14 @@ export type NetClientId = {
 };
 export type Connection = {
   isServer: boolean;
+};
+export type Score = {
+  clientId: string;
+  playerNetId: number;
+  score: number;
+};
+export type ServerConnection = {
+  roomId: string;
 };
 export type EmitMessage = {
   clientId: string;
@@ -46,6 +56,7 @@ export type CloneEverywhere = {
   life: number;
   maxLife: number;
   lifetime: number;
+  other: string;
 };
 
 export type Player = {
