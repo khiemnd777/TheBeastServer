@@ -59,6 +59,20 @@ export type CloneEverywhere = {
   other: string;
 };
 
+export type ServerCloneEverywhere = {
+  id: number;
+  clientId: string;
+  prefabName: string;
+  netName: string;
+  position: number[];
+  rotation: number[];
+  life: number;
+  maxLife: number;
+  lifetime: number;
+  other: string;
+  stored: boolean;
+};
+
 export type Player = {
   id: number;
   clientId: string;

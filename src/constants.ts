@@ -17,6 +17,8 @@ export const EVENT_EMIT_MESSAGE = "emit message";
 export const EVENT_RECEIVE_EMIT_MESSAGE = "receive emit message";
 export const EVENT_CLONE_EVERYWHERE = "clone everywhere";
 export const EVENT_BROADCAST_CLONE_EVERYWHERE = "broadcast clone everywhere";
+export const EVENT_SERVER_CLONE_EVERYWHERE = "server clone everywhere";
+export const EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE = "broadcast server clone everywhere";
 export const EVENT_REQUEST_GETTING_PLAYERS = "request getting players";
 //#endregion
 

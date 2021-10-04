@@ -7,6 +7,7 @@ import {
   EmitMessage,
   NetIdentity,
   Score,
+  ServerCloneEverywhere,
   ServerConnection,
 } from "./types";
 import {
@@ -26,6 +27,8 @@ import {
   EVENT_CLIENT_REGISTER_FINISHED,
   EVENT_LOCALLY_REGISTER_FINISHED,
   LOBBY,
+  EVENT_SERVER_CLONE_EVERYWHERE,
+  EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE,
 } from "./constants";
 import { Socket, Server } from "socket.io";
 import { DeepClone } from "./utility";
@@ -219,6 +222,12 @@ export class SocketConnection2 {
       this.socket.broadcast
         .to(this.client.roomMasterId)
         .emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
+    });
+    this.socket.on(EVENT_SERVER_CLONE_EVERYWHERE, (data: ServerCloneEverywhere) => {
+      const dataCloned = DeepClone(data) as ServerCloneEverywhere;
+      this.socket.broadcast
+        .to(this.client.roomId)
+        .emit(EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE, dataCloned);
     });
     this.socket.on("score", (data: Score) => {
       // join to the lobby after the connection established.
