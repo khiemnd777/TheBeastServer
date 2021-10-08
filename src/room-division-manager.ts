@@ -124,10 +124,12 @@ export class RoomDivisionManager {
     return lock.acquire(`${ROOM_INTERACTION}.${roomId}`, async () => {
       console.log(`Check-out for roomId: ${roomId} and guestId: ${guestId}`);
       const room = await this.GetRoomById(roomId);
-      console.log(` - Room: ${JSON.stringify(room)}`);
-      const checkedOutIndex = room.clientsList.indexOf(guestId);
-      if (checkedOutIndex > -1) {
-        room.clientsList.splice(checkedOutIndex, 1);
+      if (room) {
+        console.log(` - Room: ${JSON.stringify(room)}`);
+        const checkedOutIndex = room.clientsList.indexOf(guestId);
+        if (checkedOutIndex > -1) {
+          room.clientsList.splice(checkedOutIndex, 1);
+        }
       }
     });
   }
