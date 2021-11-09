@@ -3,12 +3,13 @@ import { Room } from "./room";
 import AsyncLock from "async-lock";
 import random from "random";
 import { spawn } from "child_process";
+import env from "./env.config";
 
-export const MAX_NUMBER_IN_ROOM = 50;
+export const MAX_NUMBER_IN_ROOM = env<number>("MAX_NUMBER_IN_ROOM");
 export const ROOM_INTERACTION = "room_interaction";
 export const CLIENT_INTERACTION = "client_interaction";
 export const ROOM_MASTER_INTERACTION = "room_master_interaction";
-export const ROOM_MASTER_PATH = `C:/Works/project_game_code_blue/build/Server/TheBeast.exe`;
+export const ROOM_MASTER_PATH = env<string>("ROOM_MASTER_PATH");
 
 const lock = new AsyncLock();
 

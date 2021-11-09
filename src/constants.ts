@@ -1,5 +1,7 @@
-export const CONNECTION_PORT = 7777;
-export const CONNECTION_PATH = "/thebeast";
+import env from "./env.config";
+
+export const CONNECTION_PORT = env<number>("CONNECTION_PORT");
+export const CONNECTION_PATH = env<string>("CONNECTION_PATH");
 export const SAME_SIDE = "same-side";
 export const EXTERNAL_SIDE = "external-side";
 export const MASTER = "master";
@@ -18,7 +20,8 @@ export const EVENT_RECEIVE_EMIT_MESSAGE = "receive emit message";
 export const EVENT_CLONE_EVERYWHERE = "clone everywhere";
 export const EVENT_BROADCAST_CLONE_EVERYWHERE = "broadcast clone everywhere";
 export const EVENT_SERVER_CLONE_EVERYWHERE = "server clone everywhere";
-export const EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE = "broadcast server clone everywhere";
+export const EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE =
+  "broadcast server clone everywhere";
 export const EVENT_REQUEST_GETTING_PLAYERS = "request getting players";
 //#endregion
 
@@ -49,7 +52,7 @@ export const EVENT_CLIENT_SYNC_HP_PICKER_CONSUME = "sync hp picker consume";
 export const EVENT_CLIENT_PLAYER_WAS_DEAD = "player dead";
 export const EVENT_CLIENT_OTHER_REGISTERED = "other registered";
 export const EVENT_CLIENT_OTHER_DISCONNECTED = "other disconnected";
-export const EVENT_SERVER_DISCONNECTED = 'server_disconnected';
+export const EVENT_SERVER_DISCONNECTED = "server_disconnected";
 export const EVENT_CLIENT_OTHER_PLAYER_FLIP = "other player flip";
 export const EVENT_CLIENT_OTHER_EYE_MOVE = "other eye move";
 export const EVENT_CLIENT_OTHER_ARM_ROTATE = "other arm rotate";
