@@ -1,7 +1,3 @@
-import env from "./env.config";
-
-export const CONNECTION_PORT = env<number>("CONNECTION_PORT");
-export const CONNECTION_PATH = env<string>("CONNECTION_PATH");
 export const SAME_SIDE = "same-side";
 export const EXTERNAL_SIDE = "external-side";
 export const MASTER = "master";

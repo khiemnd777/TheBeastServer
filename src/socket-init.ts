@@ -1,12 +1,28 @@
 import express from "express";
 import http from "http";
+import https from "https";
 import socketIO, { Socket } from "socket.io";
 import { RoomDivisionManager } from "./room-division-manager";
 import { SocketConnection2 } from "./socket-connection2";
+import fs from "fs";
+import env from "./env.config";
 
 export function initSocket(port: number = 7777, path: string = "socket.io") {
   const app = express();
-  const server = http.createServer(app);
+  let server: http.Server | https.Server;
+  if (env<boolean>("SOCKET_SECURE")) {
+    const options: https.ServerOptions = {
+      key: fs.readFileSync(env<string>("SOCKET_SECURE_KEY_PATH")),
+      cert: fs.readFileSync(env<string>("SOCKET_SECURE_CERT_PATH")),
+    };
+    const caPath = env<string>("SOCKET_SECURE_CA_PATH");
+    if (caPath) {
+      options.ca = fs.readFileSync(caPath);
+    }
+    server = https.createServer(options, app);
+  } else {
+    server = http.createServer(app);
+  }
   const io = socketIO(server, {
     path: path,
   });
