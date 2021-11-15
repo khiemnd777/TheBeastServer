@@ -147,9 +147,7 @@ export class SocketConnection2 {
       // Get available room
       let availableRooms = await this.manager.GetAvailableRooms();
       console.log(
-        `The available rooms list has found: ${JSON.stringify(
-          availableRooms
-        )}`
+        `The available rooms list has found: ${JSON.stringify(availableRooms)}`
       );
       // If not found any available room
       if (!availableRooms.length) {
@@ -223,19 +221,24 @@ export class SocketConnection2 {
         .to(this.client.roomMasterId)
         .emit(EVENT_BROADCAST_CLONE_EVERYWHERE, dataCloned);
     });
-    this.socket.on(EVENT_SERVER_CLONE_EVERYWHERE, (data: ServerCloneEverywhere) => {
-      const dataCloned = DeepClone(data) as ServerCloneEverywhere;
-      this.socket.broadcast
-        .to(this.client.roomId)
-        .emit(EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE, dataCloned);
-    });
+    this.socket.on(
+      EVENT_SERVER_CLONE_EVERYWHERE,
+      (data: ServerCloneEverywhere) => {
+        const dataCloned = DeepClone(data) as ServerCloneEverywhere;
+        this.socket.broadcast
+          .to(this.client.roomId)
+          .emit(EVENT_BROADCAST_SERVER_CLONE_EVERYWHERE, dataCloned);
+      }
+    );
     this.socket.on("score", (data: Score) => {
       // join to the lobby after the connection established.
-      console.log(`The player with net id ${data.playerNetId} is scored: ${data.score}`);
+      console.log(
+        `The player with net id ${data.playerNetId} is scored: ${data.score}`
+      );
       const dataCloned = DeepClone(data) as Score;
       this.socket.broadcast
         .to(this.client.roomId)
-        .emit('score_broadcast', dataCloned);
+        .emit("score_broadcast", dataCloned);
     });
   }
 }
